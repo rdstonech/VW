@@ -17,8 +17,10 @@ public interface BlockType extends ItemType
 	boolean isTransparent ();
 
 	boolean isFlammable ();
+	
+	float getHardness ();
 
-	int emitsLight ();
+	int getEmitsLight ();
 
-	int filtersLight ();
+	int getFiltersLight ();
 }
