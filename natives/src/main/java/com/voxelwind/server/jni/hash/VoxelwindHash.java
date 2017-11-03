@@ -5,9 +5,9 @@ import io.netty.buffer.ByteBuf;
 public interface VoxelwindHash
 {
 
-    void update(ByteBuf buf);
+	void update (ByteBuf buf);
 
-    byte[] digest();
+	byte[] digest ();
 
-    void free();
+	void free ();
 }

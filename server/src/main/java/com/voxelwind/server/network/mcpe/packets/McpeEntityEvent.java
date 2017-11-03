@@ -6,8 +6,9 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeEntityEvent implements NetworkPackage {
-    public static final byte HURT_ANIMATION = 2;
+public class McpeEntityEvent implements NetworkPackage
+{
+	public static final byte HURT_ANIMATION = 2;
 	public static final byte DEATH_ANIMATION = 3;
 	public static final byte TAME_FAIL = 6;
 	public static final byte TAME_SUCCESS = 7;
@@ -22,21 +23,23 @@ public class McpeEntityEvent implements NetworkPackage {
 	public static final byte AMBIENT_SOUND = 16;
 	public static final byte RESPAWN = 17;
 
-    private long runtimeEntityId;
-    private byte eventId;
-    private int unknown;
+	private long runtimeEntityId;
+	private byte eventId;
+	private int unknown;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        runtimeEntityId = Varints.decodeUnsigned(buffer);
-        eventId = buffer.readByte();
-        unknown = Varints.decodeSigned(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		runtimeEntityId = Varints.decodeUnsigned (buffer);
+		eventId = buffer.readByte ();
+		unknown = Varints.decodeSigned (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, runtimeEntityId);
-        buffer.writeByte(eventId);
-        Varints.encodeSigned(buffer, unknown);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, runtimeEntityId);
+		buffer.writeByte (eventId);
+		Varints.encodeSigned (buffer, unknown);
+	}
 }

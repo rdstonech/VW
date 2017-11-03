@@ -15,20 +15,23 @@ import java.util.List;
 
 import static com.voxelwind.api.game.item.ItemTypes.*;
 
-public class DiamondOreBlockBehavior extends SimpleBlockBehavior {
-    public static final BlockBehavior INSTANCE = new DiamondOreBlockBehavior();
-    private static final List<ItemType> ALLOWED_TO_BREAK = ImmutableList.of(DIAMOND_PICKAXE,
-            GOLDEN_PICKAXE, IRON_PICKAXE);
+public class DiamondOreBlockBehavior extends SimpleBlockBehavior
+{
+	public static final BlockBehavior INSTANCE = new DiamondOreBlockBehavior ();
+	private static final List<ItemType> ALLOWED_TO_BREAK = ImmutableList.of (DIAMOND_PICKAXE,
+			GOLDEN_PICKAXE, IRON_PICKAXE);
 
-    @Override
-    public Collection<ItemStack> getDrops(Server server, Player player, Block block, @Nullable ItemStack withItem) {
-        if (withItem != null && ALLOWED_TO_BREAK.contains(withItem.getItemType())) {
-            return ImmutableList.of(server.createItemStackBuilder()
-                    .itemType(ItemTypes.DIAMOND)
-                    .amount(1)
-                    .build());
-        }
+	@Override
+	public Collection<ItemStack> getDrops (Server server, Player player, Block block, @Nullable ItemStack withItem)
+	{
+		if (withItem != null && ALLOWED_TO_BREAK.contains (withItem.getItemType ()))
+		{
+			return ImmutableList.of (server.createItemStackBuilder ()
+					.itemType (ItemTypes.DIAMOND)
+					.amount (1)
+					.build ());
+		}
 
-        return ImmutableList.of();
-    }
+		return ImmutableList.of ();
+	}
 }

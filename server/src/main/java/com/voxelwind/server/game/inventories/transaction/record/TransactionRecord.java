@@ -8,23 +8,26 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public abstract class TransactionRecord{
-    private int slot;
-    private ItemStack oldItem;
-    private ItemStack newItem;
+public abstract class TransactionRecord
+{
+	private int slot;
+	private ItemStack oldItem;
+	private ItemStack newItem;
 
-    public void write(ByteBuf buffer){
-        Varints.encodeUnsigned(buffer, slot);
-        McpeUtil.writeItemStack(buffer, oldItem);
-        McpeUtil.writeItemStack(buffer, newItem);
-    }
+	public void write (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, slot);
+		McpeUtil.writeItemStack (buffer, oldItem);
+		McpeUtil.writeItemStack (buffer, newItem);
+	}
 
-    public void read(ByteBuf buffer){
-        slot = (int) Varints.decodeUnsigned(buffer);
-        oldItem = McpeUtil.readItemStack(buffer);
-        newItem = McpeUtil.readItemStack(buffer);
-    }
+	public void read (ByteBuf buffer)
+	{
+		slot = (int) Varints.decodeUnsigned (buffer);
+		oldItem = McpeUtil.readItemStack (buffer);
+		newItem = McpeUtil.readItemStack (buffer);
+	}
 
-    public abstract void execute(PlayerSession session);
+	public abstract void execute (PlayerSession session);
 }
 

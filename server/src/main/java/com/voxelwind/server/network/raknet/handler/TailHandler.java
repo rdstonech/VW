@@ -5,10 +5,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class TailHandler extends ChannelInboundHandlerAdapter {
+public class TailHandler extends ChannelInboundHandlerAdapter
+{
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("Exception occurred while handling packet", cause);
-    }
+	@Override
+	public void exceptionCaught (ChannelHandlerContext ctx, Throwable cause) throws Exception
+	{
+		log.error ("Exception occurred while handling packet", cause);
+	}
 }

@@ -8,18 +8,21 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SimpleWoodSerializerTest extends SerializerTestBase {
-    @Test
-    public void checkMetadataTest() throws Exception {
-        VoxelwindItemStack itemStack = new VoxelwindItemStack(BlockTypes.WOOD_PLANKS, 1, Wood.of(TreeSpecies.OAK));
-        short metadata = MetadataSerializer.serializeMetadata(itemStack);
-        assertEquals(0, metadata);
-    }
+public class SimpleWoodSerializerTest extends SerializerTestBase
+{
+	@Test
+	public void checkMetadataTest () throws Exception
+	{
+		VoxelwindItemStack itemStack = new VoxelwindItemStack (BlockTypes.WOOD_PLANKS, 1, Wood.of (TreeSpecies.OAK));
+		short metadata = MetadataSerializer.serializeMetadata (itemStack);
+		assertEquals (0, metadata);
+	}
 
-    @Test
-    public void checkMetadataTestAcaicaAboveIsValid() throws Exception {
-        VoxelwindItemStack itemStack2 = new VoxelwindItemStack(BlockTypes.WOOD_PLANKS, 1, Wood.of(TreeSpecies.ACACIA));
-        short metadata2 = MetadataSerializer.serializeMetadata(itemStack2);
-        assertEquals(4, metadata2);
-    }
+	@Test
+	public void checkMetadataTestAcaicaAboveIsValid () throws Exception
+	{
+		VoxelwindItemStack itemStack2 = new VoxelwindItemStack (BlockTypes.WOOD_PLANKS, 1, Wood.of (TreeSpecies.ACACIA));
+		short metadata2 = MetadataSerializer.serializeMetadata (itemStack2);
+		assertEquals (4, metadata2);
+	}
 }

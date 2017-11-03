@@ -8,19 +8,22 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeSetEntityMotion implements NetworkPackage {
-    private long runtimeEntityId;
-    private Vector3f motion;
+public class McpeSetEntityMotion implements NetworkPackage
+{
+	private long runtimeEntityId;
+	private Vector3f motion;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        runtimeEntityId = Varints.decodeUnsigned(buffer);
-        motion = McpeUtil.readVector3f(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		runtimeEntityId = Varints.decodeUnsigned (buffer);
+		motion = McpeUtil.readVector3f (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, runtimeEntityId);
-        McpeUtil.writeVector3f(buffer, motion);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, runtimeEntityId);
+		McpeUtil.writeVector3f (buffer, motion);
+	}
 }

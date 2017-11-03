@@ -11,35 +11,42 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * used to control what happens when a player joins.
  */
 @ParametersAreNonnullByDefault
-public class PlayerJoinEvent implements PlayerEvent {
-    private final Player player;
-    private String joinMessage;
+public class PlayerJoinEvent implements PlayerEvent
+{
+	private final Player player;
+	private String joinMessage;
 
-    public PlayerJoinEvent(Player player, String joinMessage) {
-        this.player = Preconditions.checkNotNull(player, "player");
-        this.joinMessage = Preconditions.checkNotNull(joinMessage, "joinMessage");
-    }
+	public PlayerJoinEvent (Player player, String joinMessage)
+	{
+		this.player = Preconditions.checkNotNull (player, "player");
+		this.joinMessage = Preconditions.checkNotNull (joinMessage, "joinMessage");
+	}
 
-    @Nonnull
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
+	@Nonnull
+	@Override
+	public Player getPlayer ()
+	{
+		return player;
+	}
 
-    /**
-     * Returns the message that will be broadcast when a player joins.
-     * @return the join message
-     */
-    @Nonnull
-    public String getJoinMessage() {
-        return joinMessage;
-    }
+	/**
+	 * Returns the message that will be broadcast when a player joins.
+	 *
+	 * @return the join message
+	 */
+	@Nonnull
+	public String getJoinMessage ()
+	{
+		return joinMessage;
+	}
 
-    /**
-     * Sets a the message that will be broadcast when a player joins.
-     * @param joinMessage the join message
-     */
-    public void setJoinMessage(@Nonnull String joinMessage) {
-        this.joinMessage = Preconditions.checkNotNull(joinMessage, "joinMessage");
-    }
+	/**
+	 * Sets a the message that will be broadcast when a player joins.
+	 *
+	 * @param joinMessage the join message
+	 */
+	public void setJoinMessage (@Nonnull String joinMessage)
+	{
+		this.joinMessage = Preconditions.checkNotNull (joinMessage, "joinMessage");
+	}
 }

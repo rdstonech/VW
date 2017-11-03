@@ -9,31 +9,34 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeLevelSoundEvent implements NetworkPackage{
-    private Sound soundId;
-    private Vector3f position;
-    private int extraData;
-    private int pitch;
-    private boolean babyMob;
-    private boolean global;
+public class McpeLevelSoundEvent implements NetworkPackage
+{
+	private Sound soundId;
+	private Vector3f position;
+	private int extraData;
+	private int pitch;
+	private boolean babyMob;
+	private boolean global;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        soundId = Sound.values()[buffer.readByte()];
-        position = McpeUtil.readVector3f(buffer);
-        extraData = Varints.decodeSigned(buffer);
-        pitch = Varints.decodeSigned(buffer);
-        babyMob = buffer.readBoolean();
-        global = buffer.readBoolean();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		soundId = Sound.values ()[buffer.readByte ()];
+		position = McpeUtil.readVector3f (buffer);
+		extraData = Varints.decodeSigned (buffer);
+		pitch = Varints.decodeSigned (buffer);
+		babyMob = buffer.readBoolean ();
+		global = buffer.readBoolean ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        buffer.writeByte(soundId.ordinal());
-        McpeUtil.writeVector3f(buffer, position);
-        Varints.encodeSigned(buffer, extraData);
-        Varints.encodeSigned(buffer, pitch);
-        buffer.writeBoolean(babyMob);
-        buffer.writeBoolean(global);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		buffer.writeByte (soundId.ordinal ());
+		McpeUtil.writeVector3f (buffer, position);
+		Varints.encodeSigned (buffer, extraData);
+		Varints.encodeSigned (buffer, pitch);
+		buffer.writeBoolean (babyMob);
+		buffer.writeBoolean (global);
+	}
 }

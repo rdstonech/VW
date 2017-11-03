@@ -29,86 +29,100 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
-public class JavaPluginLoader implements PluginLoader {
-    private final Server server;
+public class JavaPluginLoader implements PluginLoader
+{
+	private final Server server;
 
-    public JavaPluginLoader(Server server) {
-        this.server = server;
-    }
+	public JavaPluginLoader (Server server)
+	{
+		this.server = server;
+	}
 
-    @Nonnull
-    @Override
-    public PluginDescription loadPlugin(Path path) throws Exception {
-        try (JarInputStream in = new JarInputStream(new BufferedInputStream(Files.newInputStream(path)))) {
-            Manifest manifest = in.getManifest();
-            if (manifest == null) {
-                throw new IllegalArgumentException("JAR does not contain a manifest.");
-            }
+	@Nonnull
+	@Override
+	public PluginDescription loadPlugin (Path path) throws Exception
+	{
+		try (JarInputStream in = new JarInputStream (new BufferedInputStream (Files.newInputStream (path))))
+		{
+			Manifest manifest = in.getManifest ();
+			if (manifest == null)
+			{
+				throw new IllegalArgumentException ("JAR does not contain a manifest.");
+			}
 
-            JarEntry entry;
-            while ((entry = in.getNextJarEntry()) != null) {
-                if (entry.isDirectory()) {
-                    continue;
-                }
+			JarEntry entry;
+			while ((entry = in.getNextJarEntry ()) != null)
+			{
+				if (entry.isDirectory ())
+				{
+					continue;
+				}
 
-                if (!entry.getName().endsWith(".class")) {
-                    continue;
-                }
+				if (!entry.getName ().endsWith (".class"))
+				{
+					continue;
+				}
 
-                Optional<PluginInformation> information = scan(in);
-                if (information.isPresent()) {
-                    return new JavaVoxelwindPluginDescription(information.get().getId(),
-                            information.get().getAuthor(), information.get().getVersion(), ImmutableList.copyOf(information.get().getDependencies()),
-                            ImmutableList.copyOf(information.get().getSoftDependencies()), path, information.get().getClassName());
-                }
-            }
-        }
+				Optional<PluginInformation> information = scan (in);
+				if (information.isPresent ())
+				{
+					return new JavaVoxelwindPluginDescription (information.get ().getId (),
+							information.get ().getAuthor (), information.get ().getVersion (), ImmutableList.copyOf (information.get ().getDependencies ()),
+							ImmutableList.copyOf (information.get ().getSoftDependencies ()), path, information.get ().getClassName ());
+				}
+			}
+		}
 
-        throw new InvalidPluginException("No main class found");
-    }
+		throw new InvalidPluginException ("No main class found");
+	}
 
-    @Nonnull
-    @Override
-    public PluginContainer createPlugin(PluginDescription description) throws Exception {
-        if (!(description instanceof JavaVoxelwindPluginDescription)) {
-            throw new IllegalArgumentException("Description provided isn't of the Java plugin loader.");
-        }
+	@Nonnull
+	@Override
+	public PluginContainer createPlugin (PluginDescription description) throws Exception
+	{
+		if (!(description instanceof JavaVoxelwindPluginDescription))
+		{
+			throw new IllegalArgumentException ("Description provided isn't of the Java plugin loader.");
+		}
 
-        Optional<Path> path = description.getPath();
-        if (!path.isPresent()) {
-            throw new IllegalArgumentException("No path in plugin description.");
-        }
+		Optional<Path> path = description.getPath ();
+		if (!path.isPresent ())
+		{
+			throw new IllegalArgumentException ("No path in plugin description.");
+		}
 
-        return new VoxelwindPluginContainer(description.getId(), description.getAuthor(), description.getVersion(),
-                description.getDependencies(), description.getSoftDependencies(), path.get(),
-                createPlugin(path.get(), (JavaVoxelwindPluginDescription) description));
-    }
+		return new VoxelwindPluginContainer (description.getId (), description.getAuthor (), description.getVersion (),
+				description.getDependencies (), description.getSoftDependencies (), path.get (),
+				createPlugin (path.get (), (JavaVoxelwindPluginDescription) description));
+	}
 
-    private Object createPlugin(Path path, JavaVoxelwindPluginDescription description) throws MalformedURLException, ClassNotFoundException {
-        PluginClassLoader loader = new PluginClassLoader(
-                new URL[] { path.toUri().toURL() }
-        );
+	private Object createPlugin (Path path, JavaVoxelwindPluginDescription description) throws MalformedURLException, ClassNotFoundException
+	{
+		PluginClassLoader loader = new PluginClassLoader (
+				new URL[]{path.toUri ().toURL ()}
+		);
 
-        String className = description.getClassName().replace('/', '.');
-        int lastDot = className.lastIndexOf('.');
-        String packageName = lastDot == -1 ? "" : className.substring(0, className.lastIndexOf('.'));
+		String className = description.getClassName ().replace ('/', '.');
+		int lastDot = className.lastIndexOf ('.');
+		String packageName = lastDot == -1 ? "" : className.substring (0, className.lastIndexOf ('.'));
 
-        Class clz = loader.loadClass(className);
-        Injector injector = new InjectorBuilder()
-                .addDefaultHandlers(packageName)
-                .create();
-        injector.register(Server.class, server);
-        injector.register(PluginDescription.class, description);
-        injector.register(Logger.class, LoggerFactory.getLogger(description.getId()));
-        injector.register(Path.class, path.resolve("..").resolve(description.getId()));
-        return injector.newInstance(clz);
-    }
+		Class clz = loader.loadClass (className);
+		Injector injector = new InjectorBuilder ()
+				.addDefaultHandlers (packageName)
+				.create ();
+		injector.register (Server.class, server);
+		injector.register (PluginDescription.class, description);
+		injector.register (Logger.class, LoggerFactory.getLogger (description.getId ()));
+		injector.register (Path.class, path.resolve ("..").resolve (description.getId ()));
+		return injector.newInstance (clz);
+	}
 
-    private Optional<PluginInformation> scan(InputStream in) throws IOException {
-        ClassReader reader = new ClassReader(in);
-        PluginClassVisitor visitor = new PluginClassVisitor();
+	private Optional<PluginInformation> scan (InputStream in) throws IOException
+	{
+		ClassReader reader = new ClassReader (in);
+		PluginClassVisitor visitor = new PluginClassVisitor ();
 
-        reader.accept(visitor, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-        return visitor.information();
-    }
+		reader.accept (visitor, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+		return visitor.information ();
+	}
 }

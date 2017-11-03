@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeRiderJump implements NetworkPackage{
-    private int unknown0;
+public class McpeRiderJump implements NetworkPackage
+{
+	private int unknown0;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        unknown0 = Varints.decodeSigned(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		unknown0 = Varints.decodeSigned (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeSigned(buffer, unknown0);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeSigned (buffer, unknown0);
+	}
 }

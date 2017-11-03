@@ -7,16 +7,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeRespawn implements NetworkPackage {
-    private Vector3f position;
+public class McpeRespawn implements NetworkPackage
+{
+	private Vector3f position;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        position = McpeUtil.readVector3f(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		position = McpeUtil.readVector3f (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        McpeUtil.writeVector3f(buffer, position);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		McpeUtil.writeVector3f (buffer, position);
+	}
 }

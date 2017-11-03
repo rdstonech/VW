@@ -13,21 +13,22 @@ import com.voxelwind.api.server.player.TranslatedMessage;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public interface Player extends Entity, CommandExecutorSource, MessageRecipient, Session, InventoryHolder, BlockReplacer {
-    void disconnect(@Nonnull String reason);
+public interface Player extends Entity, CommandExecutorSource, MessageRecipient, Session, InventoryHolder, BlockReplacer
+{
+	void disconnect (@Nonnull String reason);
 
-    void sendMessage(@Nonnull String message, @Nonnull PlayerMessageDisplayType type);
+	void sendMessage (@Nonnull String message, @Nonnull PlayerMessageDisplayType type);
 
-    void sendTranslatedMessage(@Nonnull TranslatedMessage message);
+	void sendTranslatedMessage (@Nonnull TranslatedMessage message);
 
-    void sendPopupMessage(@Nonnull PopupMessage message);
+	void sendPopupMessage (@Nonnull PopupMessage message);
 
-    @Override
-    PlayerInventory getInventory();
+	@Override
+	PlayerInventory getInventory ();
 
-    Optional<Inventory> getOpenedInventory();
+	Optional<Inventory> getOpenedInventory ();
 
-    void openInventory(Inventory inventory);
+	void openInventory (Inventory inventory);
 
-    void closeInventory();
+	void closeInventory ();
 }

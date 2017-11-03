@@ -9,8 +9,10 @@ import com.voxelwind.server.game.entities.Spawnable;
 import com.voxelwind.server.game.level.VoxelwindLevel;
 
 @Spawnable
-public class ZombiePigmanEntity extends LivingEntity implements ZombiePigman {
-    public ZombiePigmanEntity(VoxelwindLevel level, Vector3f position, Server server) {
-        super(EntityTypeData.ZOMBIE_PIGMAN, level, position, server, 20);
-    }
+public class ZombiePigmanEntity extends LivingEntity implements ZombiePigman
+{
+	public ZombiePigmanEntity (VoxelwindLevel level, Vector3f position, Server server)
+	{
+		super (EntityTypeData.ZOMBIE_PIGMAN, level, position, server, 20);
+	}
 }

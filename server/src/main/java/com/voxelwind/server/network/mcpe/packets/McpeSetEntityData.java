@@ -7,18 +7,21 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeSetEntityData implements NetworkPackage {
-    private long runtimeEntityId;
-    private final MetadataDictionary metadata = new MetadataDictionary();
+public class McpeSetEntityData implements NetworkPackage
+{
+	private long runtimeEntityId;
+	private final MetadataDictionary metadata = new MetadataDictionary ();
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		throw new UnsupportedOperationException ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, runtimeEntityId);
-        metadata.writeTo(buffer);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, runtimeEntityId);
+		metadata.writeTo (buffer);
+	}
 }

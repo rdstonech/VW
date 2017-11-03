@@ -9,18 +9,19 @@ import java.util.UUID;
 /**
  * This interface represents a connection is that in progress.
  */
-public interface Session {
-    @Nonnull
-    String getName();
+public interface Session
+{
+	@Nonnull
+	String getName ();
 
-    @Nonnull
-    Optional<InetSocketAddress> getRemoteAddress();
+	@Nonnull
+	Optional<InetSocketAddress> getRemoteAddress ();
 
-    @Nonnull
-    UUID getUniqueId();
+	@Nonnull
+	UUID getUniqueId ();
 
-    boolean isXboxAuthenticated();
+	boolean isXboxAuthenticated ();
 
-    @Nonnull
-    OptionalLong getXuid();
+	@Nonnull
+	OptionalLong getXuid ();
 }

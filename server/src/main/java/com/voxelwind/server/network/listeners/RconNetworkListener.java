@@ -23,65 +23,75 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public class RconNetworkListener extends ChannelInitializer<SocketChannel> implements NetworkListener {
-    private final VoxelwindServer server;
-    private final EventLoopGroup group;
-    private final ExecutorService commandExecutionService = Executors.newSingleThreadExecutor(
-            new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Voxelwind RCON Command Executor").build());
-    private final byte[] password;
-    private Channel channel;
+public class RconNetworkListener extends ChannelInitializer<SocketChannel> implements NetworkListener
+{
+	private final VoxelwindServer server;
+	private final EventLoopGroup group;
+	private final ExecutorService commandExecutionService = Executors.newSingleThreadExecutor (
+			new ThreadFactoryBuilder ().setDaemon (true).setNameFormat ("Voxelwind RCON Command Executor").build ());
+	private final byte[] password;
+	private Channel channel;
 
-    public RconNetworkListener(VoxelwindServer server, byte[] password) {
-        this.server = server;
-        this.password = password;
-        ThreadFactory factory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Voxelwind RCON Listener").build();
-        this.group = Epoll.isAvailable() ? new EpollEventLoopGroup(1, factory) : new NioEventLoopGroup(1, factory);
-    }
+	public RconNetworkListener (VoxelwindServer server, byte[] password)
+	{
+		this.server = server;
+		this.password = password;
+		ThreadFactory factory = new ThreadFactoryBuilder ().setDaemon (true).setNameFormat ("Voxelwind RCON Listener").build ();
+		this.group = Epoll.isAvailable () ? new EpollEventLoopGroup (1, factory) : new NioEventLoopGroup (1, factory);
+	}
 
-    @Override
-    protected void initChannel(SocketChannel channel) throws Exception {
-        // Maximum 4KB input size. You're administrating a server, not running a proxy!
-        channel.pipeline().addLast("lengthDecoder", new LengthFieldBasedFrameDecoder(ByteOrder.LITTLE_ENDIAN, 4096, 0, 4, 0, 4, true));
-        channel.pipeline().addLast("rconDecoder", new RconDecoder());
-        channel.pipeline().addLast("rconHandler", new RconHandler(password, server, this));
-        channel.pipeline().addLast("lengthPrepender", new LengthFieldPrepender(ByteOrder.LITTLE_ENDIAN, 4, 0, false));
-        channel.pipeline().addLast("rconEncoder", new RconEncoder());
-    }
+	@Override
+	protected void initChannel (SocketChannel channel) throws Exception
+	{
+		// Maximum 4KB input size. You're administrating a server, not running a proxy!
+		channel.pipeline ().addLast ("lengthDecoder", new LengthFieldBasedFrameDecoder (ByteOrder.LITTLE_ENDIAN, 4096, 0, 4, 0, 4, true));
+		channel.pipeline ().addLast ("rconDecoder", new RconDecoder ());
+		channel.pipeline ().addLast ("rconHandler", new RconHandler (password, server, this));
+		channel.pipeline ().addLast ("lengthPrepender", new LengthFieldPrepender (ByteOrder.LITTLE_ENDIAN, 4, 0, false));
+		channel.pipeline ().addLast ("rconEncoder", new RconEncoder ());
+	}
 
-    public ExecutorService getCommandExecutionService() {
-        return commandExecutionService;
-    }
+	public ExecutorService getCommandExecutionService ()
+	{
+		return commandExecutionService;
+	}
 
-    @Override
-    public boolean bind() {
-        ChannelFuture future = new ServerBootstrap()
-                .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .group(group)
-                .childHandler(this)
-                .bind(server.getConfiguration().getRcon().getHost(), server.getConfiguration().getRcon().getPort())
-                .awaitUninterruptibly();
+	@Override
+	public boolean bind ()
+	{
+		ChannelFuture future = new ServerBootstrap ()
+				.channel (Epoll.isAvailable () ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+				.option (ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+				.group (group)
+				.childHandler (this)
+				.bind (server.getConfiguration ().getRcon ().getHost (), server.getConfiguration ().getRcon ().getPort ())
+				.awaitUninterruptibly ();
 
-        if (future.isSuccess()) {
-            this.channel = future.channel();
-            return true;
-        }
+		if (future.isSuccess ())
+		{
+			this.channel = future.channel ();
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public void close() {
-        commandExecutionService.shutdown();
-        try {
-            commandExecutionService.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            // not handling
-        }
-        commandExecutionService.shutdownNow();
-        group.shutdownGracefully();
-        if (channel != null) {
-            channel.close();
-        }
-    }
+	@Override
+	public void close ()
+	{
+		commandExecutionService.shutdown ();
+		try
+		{
+			commandExecutionService.awaitTermination (10, TimeUnit.SECONDS);
+		} catch (InterruptedException e)
+		{
+			// not handling
+		}
+		commandExecutionService.shutdownNow ();
+		group.shutdownGracefully ();
+		if (channel != null)
+		{
+			channel.close ();
+		}
+	}
 }

@@ -19,51 +19,59 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class AnvilLevelDataProvider implements LevelDataProvider {
-    private final Vector3f spawnLocation;
-    private final int savedTime;
-    private final long seed;
+@RequiredArgsConstructor (access = AccessLevel.PRIVATE)
+public class AnvilLevelDataProvider implements LevelDataProvider
+{
+	private final Vector3f spawnLocation;
+	private final int savedTime;
+	private final long seed;
 
-    public static AnvilLevelDataProvider load(@NonNull Path levelDatPath) throws IOException {
-        // level.dat is Notchian, so it's big-endian and GZIP compressed
-        CompoundTag tag;
-        try (NBTReader reader = NBTReaders.createBigEndianReader(new GZIPInputStream(Files.newInputStream(levelDatPath)))) {
-            tag = (CompoundTag) reader.readTag();
-        }
+	public static AnvilLevelDataProvider load (@NonNull Path levelDatPath) throws IOException
+	{
+		// level.dat is Notchian, so it's big-endian and GZIP compressed
+		CompoundTag tag;
+		try (NBTReader reader = NBTReaders.createBigEndianReader (new GZIPInputStream (Files.newInputStream (levelDatPath))))
+		{
+			tag = (CompoundTag) reader.readTag ();
+		}
 
-        CompoundTag dataTag = (CompoundTag) tag.getValue().get("Data");
-        Map<String, Tag<?>> map = dataTag.getValue();
+		CompoundTag dataTag = (CompoundTag) tag.getValue ().get ("Data");
+		Map<String, Tag<?>> map = dataTag.getValue ();
 
-        Vector3i out = new Vector3i(((IntTag) map.get("SpawnX")).getPrimitiveValue(), ((IntTag) map.get("SpawnY")).getPrimitiveValue(),
-                ((IntTag) map.get("SpawnZ")).getPrimitiveValue());
-        long dayTime = ((LongTag) map.get("DayTime")).getPrimitiveValue();
-        long seed = ((LongTag) map.get("RandomSeed")).getPrimitiveValue();
-        return new AnvilLevelDataProvider(out.toFloat(), (int) dayTime, seed);
-    }
+		Vector3i out = new Vector3i (((IntTag) map.get ("SpawnX")).getPrimitiveValue (), ((IntTag) map.get ("SpawnY")).getPrimitiveValue (),
+				((IntTag) map.get ("SpawnZ")).getPrimitiveValue ());
+		long dayTime = ((LongTag) map.get ("DayTime")).getPrimitiveValue ();
+		long seed = ((LongTag) map.get ("RandomSeed")).getPrimitiveValue ();
+		return new AnvilLevelDataProvider (out.toFloat (), (int) dayTime, seed);
+	}
 
-    @Override
-    public Vector3f getSpawnLocation() {
-        return spawnLocation;
-    }
+	@Override
+	public Vector3f getSpawnLocation ()
+	{
+		return spawnLocation;
+	}
 
-    @Override
-    public void setSpawnLocation(Vector3f spawn) {
+	@Override
+	public void setSpawnLocation (Vector3f spawn)
+	{
 
-    }
+	}
 
-    @Override
-    public int getSavedTime() {
-        return savedTime;
-    }
+	@Override
+	public int getSavedTime ()
+	{
+		return savedTime;
+	}
 
-    @Override
-    public void setSavedTime(int time) {
+	@Override
+	public void setSavedTime (int time)
+	{
 
-    }
+	}
 
-    @Override
-    public long getSeed() {
-        return seed;
-    }
+	@Override
+	public long getSeed ()
+	{
+		return seed;
+	}
 }

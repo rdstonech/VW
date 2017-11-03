@@ -8,28 +8,31 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeMobEquipment implements NetworkPackage {
-    private long runtimeEntityId;
-    private ItemStack stack;
-    private byte inventorySlot;
-    private byte hotbarSlot;
-    private byte windowId;
+public class McpeMobEquipment implements NetworkPackage
+{
+	private long runtimeEntityId;
+	private ItemStack stack;
+	private byte inventorySlot;
+	private byte hotbarSlot;
+	private byte windowId;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        runtimeEntityId = Varints.decodeUnsigned(buffer);
-        stack = McpeUtil.readItemStack(buffer);
-        inventorySlot = buffer.readByte();
-        hotbarSlot = buffer.readByte();
-        windowId = buffer.readByte();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		runtimeEntityId = Varints.decodeUnsigned (buffer);
+		stack = McpeUtil.readItemStack (buffer);
+		inventorySlot = buffer.readByte ();
+		hotbarSlot = buffer.readByte ();
+		windowId = buffer.readByte ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, runtimeEntityId);
-        McpeUtil.writeItemStack(buffer, stack);
-        buffer.writeInt(inventorySlot);
-        buffer.writeInt(hotbarSlot);
-        buffer.writeByte(windowId);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, runtimeEntityId);
+		McpeUtil.writeItemStack (buffer, stack);
+		buffer.writeInt (inventorySlot);
+		buffer.writeInt (hotbarSlot);
+		buffer.writeByte (windowId);
+	}
 }

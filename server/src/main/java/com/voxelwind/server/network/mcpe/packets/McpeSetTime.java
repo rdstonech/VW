@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeSetTime implements NetworkPackage {
-    private int time;
+public class McpeSetTime implements NetworkPackage
+{
+	private int time;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        time = Varints.decodeSigned(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		time = Varints.decodeSigned (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeSigned(buffer, time);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeSigned (buffer, time);
+	}
 }

@@ -16,23 +16,26 @@ import com.voxelwind.server.game.level.VoxelwindLevel;
 import com.voxelwind.server.network.NetworkPackage;
 import com.voxelwind.server.network.mcpe.packets.McpeAddItemEntity;
 
-public class VoxelwindDroppedItem extends BaseEntity implements DroppedItem {
-    public VoxelwindDroppedItem(VoxelwindLevel level, Vector3f position, Server server, ItemStack dropped) {
-        super(EntityTypeData.ITEM, position, level, server);
+public class VoxelwindDroppedItem extends BaseEntity implements DroppedItem
+{
+	public VoxelwindDroppedItem (VoxelwindLevel level, Vector3f position, Server server, ItemStack dropped)
+	{
+		super (EntityTypeData.ITEM, position, level, server);
 
-        this.registerComponent(PickupDelay.class, new PickupDelayComponent());
-        this.registerComponent(Physics.class, new PhysicsComponent());
-        this.registerComponent(ContainedItem.class, new ContainedItemComponent(dropped));
-    }
+		this.registerComponent (PickupDelay.class, new PickupDelayComponent ());
+		this.registerComponent (Physics.class, new PhysicsComponent ());
+		this.registerComponent (ContainedItem.class, new ContainedItemComponent (dropped));
+	}
 
-    @Override
-    public NetworkPackage createAddEntityPacket() {
-        McpeAddItemEntity packet = new McpeAddItemEntity();
-        packet.setEntityId(getEntityId());
-        packet.setPosition(getGamePosition());
-        packet.setVelocity(getMotion());
-        packet.setStack(ensureAndGet(ContainedItem.class).getItemStack());
-        packet.getMetadata().putAll(getMetadata());
-        return packet;
-    }
+	@Override
+	public NetworkPackage createAddEntityPacket ()
+	{
+		McpeAddItemEntity packet = new McpeAddItemEntity ();
+		packet.setEntityId (getEntityId ());
+		packet.setPosition (getGamePosition ());
+		packet.setVelocity (getMotion ());
+		packet.setStack (ensureAndGet (ContainedItem.class).getItemStack ());
+		packet.getMetadata ().putAll (getMetadata ());
+		return packet;
+	}
 }

@@ -19,319 +19,367 @@ import java.util.*;
 
 import static com.voxelwind.server.network.mcpe.util.metadata.EntityMetadataConstants.*;
 
-public class BaseEntity implements Entity {
-    private long entityId;
-    private final Server server;
-    private final EntityTypeData data;
-    private VoxelwindLevel level;
-    private Vector3f position;
-    private Vector3f motion;
-    private Rotation rotation;
-    private boolean stale = true;
-    private boolean teleported = false;
-    protected boolean sprinting = false;
-    protected boolean sneaking = false;
-    private boolean invisible = false;
-    private boolean removed = false;
-    private boolean affectedByGravity = true;
-    protected long tickCreated;
-    private BoundingBox boundingBox;
-    private final Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
+public class BaseEntity implements Entity
+{
+	private long entityId;
+	private final Server server;
+	private final EntityTypeData data;
+	private VoxelwindLevel level;
+	private Vector3f position;
+	private Vector3f motion;
+	private Rotation rotation;
+	private boolean stale = true;
+	private boolean teleported = false;
+	protected boolean sprinting = false;
+	protected boolean sneaking = false;
+	private boolean invisible = false;
+	private boolean removed = false;
+	private boolean affectedByGravity = true;
+	protected long tickCreated;
+	private BoundingBox boundingBox;
+	private final Map<Class<? extends Component>, Component> componentMap = new HashMap<> ();
 
-    public BaseEntity(EntityTypeData data, Vector3f position, VoxelwindLevel level, Server server) {
-        this.data = data;
-        this.level = Preconditions.checkNotNull(level, "level");
-        this.position = Preconditions.checkNotNull(position, "position");
-        this.entityId = level.getEntityManager().allocateEntityId();
-        this.server = server;
-        this.rotation = Rotation.ZERO;
-        this.motion = Vector3f.ZERO;
-        this.level.getEntityManager().register(this);
-        this.tickCreated = level.getCurrentTick();
-        refreshBoundingBox();
-    }
+	public BaseEntity (EntityTypeData data, Vector3f position, VoxelwindLevel level, Server server)
+	{
+		this.data = data;
+		this.level = Preconditions.checkNotNull (level, "level");
+		this.position = Preconditions.checkNotNull (position, "position");
+		this.entityId = level.getEntityManager ().allocateEntityId ();
+		this.server = server;
+		this.rotation = Rotation.ZERO;
+		this.motion = Vector3f.ZERO;
+		this.level.getEntityManager ().register (this);
+		this.tickCreated = level.getCurrentTick ();
+		refreshBoundingBox ();
+	}
 
-    @Override
-    public long getEntityId() {
-        return entityId;
-    }
+	@Override
+	public long getEntityId ()
+	{
+		return entityId;
+	}
 
-    @Nonnull
-    @Override
-    public VoxelwindLevel getLevel() {
-        return level;
-    }
+	@Nonnull
+	@Override
+	public VoxelwindLevel getLevel ()
+	{
+		return level;
+	}
 
-    @Nonnull
-    @Override
-    public Vector3f getPosition() {
-        return position;
-    }
+	@Nonnull
+	@Override
+	public Vector3f getPosition ()
+	{
+		return position;
+	}
 
-    @Nonnull
-    @Override
-    public Vector3f getGamePosition() {
-        return getPosition().add(0, data.getHeight(), 0);
-    }
+	@Nonnull
+	@Override
+	public Vector3f getGamePosition ()
+	{
+		return getPosition ().add (0, data.getHeight (), 0);
+	}
 
-    protected void setPosition(Vector3f position) {
-        Preconditions.checkNotNull(position, "position");
-        checkIfAlive();
+	protected void setPosition (Vector3f position)
+	{
+		Preconditions.checkNotNull (position, "position");
+		checkIfAlive ();
 
-        if (!this.position.equals(position)) {
-            this.position = position;
-            stale = true;
+		if (!this.position.equals (position))
+		{
+			this.position = position;
+			stale = true;
 
-            refreshBoundingBox();
-        }
-    }
+			refreshBoundingBox ();
+		}
+	}
 
-    @Override
-    public void setPositionFromSystem(Vector3f position) {
-        Preconditions.checkState(level.getEntityManager().isTicking(), "entities in level are not being ticked");
-        setPosition(position);
-    }
+	@Override
+	public void setPositionFromSystem (Vector3f position)
+	{
+		Preconditions.checkState (level.getEntityManager ().isTicking (), "entities in level are not being ticked");
+		setPosition (position);
+	}
 
-    @Nonnull
-    @Override
-    public Rotation getRotation() {
-        return rotation;
-    }
+	@Nonnull
+	@Override
+	public Rotation getRotation ()
+	{
+		return rotation;
+	}
 
-    @Override
-    public void setRotation(@Nonnull Rotation rotation) {
-        Preconditions.checkNotNull(rotation, "rotation");
-        checkIfAlive();
+	@Override
+	public void setRotation (@Nonnull Rotation rotation)
+	{
+		Preconditions.checkNotNull (rotation, "rotation");
+		checkIfAlive ();
 
-        if (!this.rotation.equals(rotation)) {
-            this.rotation = rotation;
-            stale = true;
-        }
-    }
+		if (!this.rotation.equals (rotation))
+		{
+			this.rotation = rotation;
+			stale = true;
+		}
+	}
 
-    @Override
-    public Vector3f getMotion() {
-        return motion;
-    }
+	@Override
+	public Vector3f getMotion ()
+	{
+		return motion;
+	}
 
-    @Override
-    public void setMotion(@Nonnull Vector3f motion) {
-        Preconditions.checkNotNull(motion, "motion");
-        checkIfAlive();
+	@Override
+	public void setMotion (@Nonnull Vector3f motion)
+	{
+		Preconditions.checkNotNull (motion, "motion");
+		checkIfAlive ();
 
-        if (!this.motion.equals(motion)) {
-            this.motion = motion;
-            stale = true;
-        }
-    }
+		if (!this.motion.equals (motion))
+		{
+			this.motion = motion;
+			stale = true;
+		}
+	}
 
-    @Override
-    public boolean isSprinting() {
-        return sprinting;
-    }
+	@Override
+	public boolean isSprinting ()
+	{
+		return sprinting;
+	}
 
-    @Override
-    public void setSprinting(boolean sprinting) {
-        checkIfAlive();
+	@Override
+	public void setSprinting (boolean sprinting)
+	{
+		checkIfAlive ();
 
-        if (this.sprinting != sprinting) {
-            this.sprinting = sprinting;
-            stale = true;
-        }
-    }
+		if (this.sprinting != sprinting)
+		{
+			this.sprinting = sprinting;
+			stale = true;
+		}
+	}
 
-    @Override
-    public boolean isSneaking() {
-        return sneaking;
-    }
+	@Override
+	public boolean isSneaking ()
+	{
+		return sneaking;
+	}
 
-    @Override
-    public void setSneaking(boolean sneaking) {
-        checkIfAlive();
+	@Override
+	public void setSneaking (boolean sneaking)
+	{
+		checkIfAlive ();
 
-        if (this.sneaking != sneaking) {
-            this.sneaking = sneaking;
-            stale = true;
-        }
-    }
+		if (this.sneaking != sneaking)
+		{
+			this.sneaking = sneaking;
+			stale = true;
+		}
+	}
 
-    @Override
-    public boolean isInvisible() {
-        return invisible;
-    }
+	@Override
+	public boolean isInvisible ()
+	{
+		return invisible;
+	}
 
-    @Override
-    public void setInvisible(boolean invisible) {
-        checkIfAlive();
+	@Override
+	public void setInvisible (boolean invisible)
+	{
+		checkIfAlive ();
 
-        if (this.invisible != invisible) {
-            this.invisible = invisible;
-            stale = true;
-        }
-    }
+		if (this.invisible != invisible)
+		{
+			this.invisible = invisible;
+			stale = true;
+		}
+	}
 
-    @Override
-    public boolean isAffectedByGravity() {
-        return affectedByGravity;
-    }
+	@Override
+	public boolean isAffectedByGravity ()
+	{
+		return affectedByGravity;
+	}
 
-    @Override
-    public void setAffectedByGravity(boolean affectedByGravity) {
-        checkIfAlive();
+	@Override
+	public void setAffectedByGravity (boolean affectedByGravity)
+	{
+		checkIfAlive ();
 
-        if (this.affectedByGravity != affectedByGravity) {
-            this.affectedByGravity = affectedByGravity;
-            stale = true;
-        }
-    }
+		if (this.affectedByGravity != affectedByGravity)
+		{
+			this.affectedByGravity = affectedByGravity;
+			stale = true;
+		}
+	}
 
-    @Override
-    public Set<Class<? extends Component>> providedComponents() {
-        // By default, entities don't provide any components.
-        return ImmutableSet.copyOf(componentMap.keySet());
-    }
+	@Override
+	public Set<Class<? extends Component>> providedComponents ()
+	{
+		// By default, entities don't provide any components.
+		return ImmutableSet.copyOf (componentMap.keySet ());
+	}
 
-    @Override
-    public <C extends Component> boolean provides(@Nonnull Class<C> clazz) {
-        return componentMap.containsKey(clazz);
-    }
+	@Override
+	public <C extends Component> boolean provides (@Nonnull Class<C> clazz)
+	{
+		return componentMap.containsKey (clazz);
+	}
 
-    protected <C extends Component> void registerComponent(Class<C> clazz, C component) {
-        componentMap.put(clazz, component);
-    }
+	protected <C extends Component> void registerComponent (Class<C> clazz, C component)
+	{
+		componentMap.put (clazz, component);
+	}
 
-    @Override
-    public <C extends Component> Optional<C> get(@Nonnull Class<C> clazz) {
-        Preconditions.checkNotNull(clazz, "clazz");
-        return Optional.ofNullable((C) componentMap.get(clazz));
-    }
+	@Override
+	public <C extends Component> Optional<C> get (@Nonnull Class<C> clazz)
+	{
+		Preconditions.checkNotNull (clazz, "clazz");
+		return Optional.ofNullable ((C) componentMap.get (clazz));
+	}
 
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
-    }
+	public BoundingBox getBoundingBox ()
+	{
+		return boundingBox;
+	}
 
-    private void refreshBoundingBox() {
-        boundingBox = new BoundingBox(getPosition(), getPosition()).grow(data.getWidth() / 2, data.getLength() / 2, data.getWidth() / 2);
-    }
+	private void refreshBoundingBox ()
+	{
+		boundingBox = new BoundingBox (getPosition (), getPosition ()).grow (data.getWidth () / 2, data.getLength () / 2, data.getWidth () / 2);
+	}
 
-    protected long getFlagValue() {
-        BitSet set = new BitSet(64);
-        // Fill with values
-        set.set(DATA_FLAGS_AFFECTED_BY_GRAVITY, affectedByGravity); // Affected by Gravity
-        set.set(DATA_FLAGS_ON_FIRE, false); // Not implemented
-        set.set(DATA_FLAGS_SNEAKING, sneaking); // Sneaking
-        set.set(DATA_FLAGS_RIDING, false); // Riding (not implemented)
-        set.set(DATA_FLAGS_SPRINTING, sprinting); // Sprinting
-        set.set(DATA_FLAGS_INVISIBLE, invisible); // Invisible
+	protected long getFlagValue ()
+	{
+		BitSet set = new BitSet (64);
+		// Fill with values
+		set.set (DATA_FLAGS_AFFECTED_BY_GRAVITY, affectedByGravity); // Affected by Gravity
+		set.set (DATA_FLAGS_ON_FIRE, false); // Not implemented
+		set.set (DATA_FLAGS_SNEAKING, sneaking); // Sneaking
+		set.set (DATA_FLAGS_RIDING, false); // Riding (not implemented)
+		set.set (DATA_FLAGS_SPRINTING, sprinting); // Sprinting
+		set.set (DATA_FLAGS_INVISIBLE, invisible); // Invisible
 
-        long[] array = set.toLongArray();
-        return array.length == 0 ? 0 : array[0];
-    }
+		long[] array = set.toLongArray ();
+		return array.length == 0 ? 0 : array[0];
+	}
 
-    protected MetadataDictionary getMetadata() {
-        checkIfAlive();
+	protected MetadataDictionary getMetadata ()
+	{
+		checkIfAlive ();
 
-        // TODO: Implement more than this.
-        MetadataDictionary dictionary = new MetadataDictionary();
-        dictionary.put(DATA_ENTITY_FLAGS, getFlagValue());
-        dictionary.put(DATA_NAMETAG, ""); // Not implemented
-        dictionary.put(DATA_HIDE_NAME_TAG, (byte) 0); // Not implemented
-        dictionary.put(DATA_MAYBE_AGE, 0); // Scale (not implemented)
-        dictionary.put(DATA_SCALE, 1f); // Scale (not implemented)
-        dictionary.put(DATA_MAX_AIR, (short) 400);
-        dictionary.put(DATA_AIR, (short) 0);
-        dictionary.put(DATA_COLLISION_BOX_HEIGHT, data.getHeight());
-        dictionary.put(DATA_COLLISION_BOX_WIDTH, data.getWidth());
-        return dictionary;
-    }
+		// TODO: Implement more than this.
+		MetadataDictionary dictionary = new MetadataDictionary ();
+		dictionary.put (DATA_ENTITY_FLAGS, getFlagValue ());
+		dictionary.put (DATA_NAMETAG, ""); // Not implemented
+		dictionary.put (DATA_HIDE_NAME_TAG, (byte) 0); // Not implemented
+		dictionary.put (DATA_MAYBE_AGE, 0); // Scale (not implemented)
+		dictionary.put (DATA_SCALE, 1f); // Scale (not implemented)
+		dictionary.put (DATA_MAX_AIR, (short) 400);
+		dictionary.put (DATA_AIR, (short) 0);
+		dictionary.put (DATA_COLLISION_BOX_HEIGHT, data.getHeight ());
+		dictionary.put (DATA_COLLISION_BOX_WIDTH, data.getWidth ());
+		return dictionary;
+	}
 
-    public NetworkPackage createAddEntityPacket() {
-        checkIfAlive();
+	public NetworkPackage createAddEntityPacket ()
+	{
+		checkIfAlive ();
 
-        McpeAddEntity packet = new McpeAddEntity();
-        packet.setEntityId(getEntityId());
-        packet.setRuntimeEntityId(getEntityId());
-        packet.setEntityType(data.getType());
-        packet.setPosition(getGamePosition());
-        packet.setVelocity(getMotion());
-        packet.setPitch(getRotation().getPitch());
-        packet.setYaw(getRotation().getPitch());
-        packet.getMetadata().putAll(getMetadata());
-        return packet;
-    }
+		McpeAddEntity packet = new McpeAddEntity ();
+		packet.setEntityId (getEntityId ());
+		packet.setRuntimeEntityId (getEntityId ());
+		packet.setEntityType (data.getType ());
+		packet.setPosition (getGamePosition ());
+		packet.setVelocity (getMotion ());
+		packet.setPitch (getRotation ().getPitch ());
+		packet.setYaw (getRotation ().getPitch ());
+		packet.getMetadata ().putAll (getMetadata ());
+		return packet;
+	}
 
-    public boolean isStale() {
-        return stale;
-    }
+	public boolean isStale ()
+	{
+		return stale;
+	}
 
-    protected boolean isTeleported() {
-        return teleported;
-    }
+	protected boolean isTeleported ()
+	{
+		return teleported;
+	}
 
-    public void resetStale() {
-        checkIfAlive();
+	public void resetStale ()
+	{
+		checkIfAlive ();
 
-        stale = false;
-        teleported = false;
-    }
+		stale = false;
+		teleported = false;
+	}
 
-    @Override
-    public void teleport(@Nonnull Vector3f position) {
-        teleport(level, position, rotation);
-    }
+	@Override
+	public void teleport (@Nonnull Vector3f position)
+	{
+		teleport (level, position, rotation);
+	}
 
-    @Override
-    public void teleport(@Nonnull Level level, @Nonnull Vector3f position) {
-        teleport(level, position, rotation);
-    }
+	@Override
+	public void teleport (@Nonnull Level level, @Nonnull Vector3f position)
+	{
+		teleport (level, position, rotation);
+	}
 
-    @Override
-    public void teleport(@Nonnull Level level, @Nonnull Vector3f position, @Nonnull Rotation rotation) {
-        Preconditions.checkNotNull(level, "level");
-        Preconditions.checkNotNull(position, "position");
-        Preconditions.checkNotNull(rotation, "rotation");
-        Preconditions.checkArgument(level instanceof VoxelwindLevel, "Not a valid level.");
-        Preconditions.checkArgument(level.getChunkIfLoadedForPosition(position.toInt()).isPresent(), "Position is in a chunk that is not loaded.");
+	@Override
+	public void teleport (@Nonnull Level level, @Nonnull Vector3f position, @Nonnull Rotation rotation)
+	{
+		Preconditions.checkNotNull (level, "level");
+		Preconditions.checkNotNull (position, "position");
+		Preconditions.checkNotNull (rotation, "rotation");
+		Preconditions.checkArgument (level instanceof VoxelwindLevel, "Not a valid level.");
+		Preconditions.checkArgument (level.getChunkIfLoadedForPosition (position.toInt ()).isPresent (), "Position is in a chunk that is not loaded.");
 
-        checkIfAlive();
+		checkIfAlive ();
 
-        VoxelwindLevel oldLevel = this.level;
-        if (oldLevel != level) {
-            oldLevel.getEntityManager().unregister(this);
-            ((VoxelwindLevel) level).getEntityManager().register(this);
-            entityId = ((VoxelwindLevel) level).getEntityManager().allocateEntityId();
-            tickCreated = level.getCurrentTick();
+		VoxelwindLevel oldLevel = this.level;
+		if (oldLevel != level)
+		{
+			oldLevel.getEntityManager ().unregister (this);
+			((VoxelwindLevel) level).getEntityManager ().register (this);
+			entityId = ((VoxelwindLevel) level).getEntityManager ().allocateEntityId ();
+			tickCreated = level.getCurrentTick ();
 
-            // Mark as stale so that the destination level's entity manager will send the appropriate packets.
-            this.stale = true;
-        }
-        this.level = (VoxelwindLevel) level;
-        setPosition(position);
-        setRotation(rotation);
-        this.teleported = true;
-    }
+			// Mark as stale so that the destination level's entity manager will send the appropriate packets.
+			this.stale = true;
+		}
+		this.level = (VoxelwindLevel) level;
+		setPosition (position);
+		setRotation (rotation);
+		this.teleported = true;
+	}
 
-    @Override
-    public void remove() {
-        checkIfAlive();
-        removed = true;
-    }
+	@Override
+	public void remove ()
+	{
+		checkIfAlive ();
+		removed = true;
+	}
 
-    @Override
-    public boolean isRemoved() {
-        return removed;
-    }
+	@Override
+	public boolean isRemoved ()
+	{
+		return removed;
+	}
 
-    @Override
-    public Server getServer() {
-        return server;
-    }
+	@Override
+	public Server getServer ()
+	{
+		return server;
+	}
 
-    final void checkIfAlive() {
-        Preconditions.checkState(!removed, "Entity has been removed.");
-    }
+	final void checkIfAlive ()
+	{
+		Preconditions.checkState (!removed, "Entity has been removed.");
+	}
 
-    protected void setEntityId(long entityId) {
-        this.entityId = entityId;
-    }
+	protected void setEntityId (long entityId)
+	{
+		this.entityId = entityId;
+	}
 }

@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@ToString (callSuper = true)
+@EqualsAndHashCode (callSuper = true)
 @Data
-public class GlobalTransactionRecord extends TransactionRecord {
+public class GlobalTransactionRecord extends TransactionRecord
+{
 
-    @Override
-    public void execute(PlayerSession session) {
-        // TODO
-    }
+	@Override
+	public void execute (PlayerSession session)
+	{
+		// TODO
+	}
 }

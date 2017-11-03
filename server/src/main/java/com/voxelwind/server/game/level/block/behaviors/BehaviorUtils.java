@@ -20,59 +20,69 @@ import lombok.experimental.UtilityClass;
 import java.util.Optional;
 
 @UtilityClass
-public class BehaviorUtils {
-    public static boolean setBlockState(Player player, Vector3i position, BlockState state) {
-        int chunkX = position.getX() >> 4;
-        int chunkZ = position.getZ() >> 4;
+public class BehaviorUtils
+{
+	public static boolean setBlockState (Player player, Vector3i position, BlockState state)
+	{
+		int chunkX = position.getX () >> 4;
+		int chunkZ = position.getZ () >> 4;
 
-        Optional<Chunk> chunkOptional = player.getLevel().getChunkIfLoaded(chunkX, chunkZ);
-        if (!chunkOptional.isPresent()) {
-            // Chunk not loaded, danger ahead!
-            return false;
-        }
+		Optional<Chunk> chunkOptional = player.getLevel ().getChunkIfLoaded (chunkX, chunkZ);
+		if (!chunkOptional.isPresent ())
+		{
+			// Chunk not loaded, danger ahead!
+			return false;
+		}
 
-        Block old = chunkOptional.get().getBlock(position.getX() & 0x0f, position.getY(), position.getZ() & 0x0f);
-        if (!canProceed(old, state, player)) {
-            return false;
-        }
-        chunkOptional.get().setBlock(position.getX() & 0x0f, position.getY(), position.getZ() & 0x0f, state);
-        ((VoxelwindLevel) player.getLevel()).broadcastBlockUpdate(position);
-        return true;
-    }
+		Block old = chunkOptional.get ().getBlock (position.getX () & 0x0f, position.getY (), position.getZ () & 0x0f);
+		if (!canProceed (old, state, player))
+		{
+			return false;
+		}
+		chunkOptional.get ().setBlock (position.getX () & 0x0f, position.getY (), position.getZ () & 0x0f, state);
+		((VoxelwindLevel) player.getLevel ()).broadcastBlockUpdate (position);
+		return true;
+	}
 
-    public static boolean replaceBlockState(Player player, Block block, BlockState replacementState) {
-        if (!canProceed(block, replacementState, player)) {
-            return false;
-        }
-        block.getChunk().setBlock(block.getChunkLocation().getX(), block.getChunkLocation().getY(), block.getChunkLocation().getZ(), replacementState);
-        ((VoxelwindLevel) player.getLevel()).broadcastBlockUpdate(block.getLevelLocation());
-        return true;
-    }
+	public static boolean replaceBlockState (Player player, Block block, BlockState replacementState)
+	{
+		if (!canProceed (block, replacementState, player))
+		{
+			return false;
+		}
+		block.getChunk ().setBlock (block.getChunkLocation ().getX (), block.getChunkLocation ().getY (), block.getChunkLocation ().getZ (), replacementState);
+		((VoxelwindLevel) player.getLevel ()).broadcastBlockUpdate (block.getLevelLocation ());
+		return true;
+	}
 
-    private static boolean canProceed(Block block, BlockState newState, Player player) {
-        BlockReplaceEvent event = new BlockReplaceEvent(block, block.getBlockState(), newState, player,
-                BlockReplaceEvent.ReplaceReason.PLAYER_PLACE);
-        player.getServer().getEventManager().fire(event);
-        return event.getResult() == BlockReplaceEvent.Result.CONTINUE;
-    }
+	private static boolean canProceed (Block block, BlockState newState, Player player)
+	{
+		BlockReplaceEvent event = new BlockReplaceEvent (block, block.getBlockState (), newState, player,
+				BlockReplaceEvent.ReplaceReason.PLAYER_PLACE);
+		player.getServer ().getEventManager ().fire (event);
+		return event.getResult () == BlockReplaceEvent.Result.CONTINUE;
+	}
 
-    public static BlockState createBlockState(Vector3i position, BlockFace face, ItemStack stack) {
-        Preconditions.checkNotNull(stack, "stack");
+	public static BlockState createBlockState (Vector3i position, BlockFace face, ItemStack stack)
+	{
+		Preconditions.checkNotNull (stack, "stack");
 
-        if (!(stack.getItemType() instanceof BlockType)) {
-            throw new IllegalArgumentException("Item type " + stack.getItemType().getName() + " is not a block type.");
-        }
+		if (!(stack.getItemType () instanceof BlockType))
+		{
+			throw new IllegalArgumentException ("Item type " + stack.getItemType ().getName () + " is not a block type.");
+		}
 
-        // Consult block behavior for the relevant block.
-        Optional<BlockState> overrideOptional = BlockBehaviors.getBlockBehavior((BlockType) stack.getItemType())
-                .overrideBlockPlacement(position, face, stack);
-        if (overrideOptional.isPresent()) {
-            return overrideOptional.get();
-        }
+		// Consult block behavior for the relevant block.
+		Optional<BlockState> overrideOptional = BlockBehaviors.getBlockBehavior ((BlockType) stack.getItemType ())
+				.overrideBlockPlacement (position, face, stack);
+		if (overrideOptional.isPresent ())
+		{
+			return overrideOptional.get ();
+		}
 
-        BlockType blockType = (BlockType) stack.getItemType();
-        Optional<Metadata> itemData = stack.getItemData();
-        Metadata blockData = itemData.isPresent() ? itemData.get() : null;
-        return new BasicBlockState(blockType, blockData, null);
-    }
+		BlockType blockType = (BlockType) stack.getItemType ();
+		Optional<Metadata> itemData = stack.getItemData ();
+		Metadata blockData = itemData.isPresent () ? itemData.get () : null;
+		return new BasicBlockState (blockType, blockData, null);
+	}
 }

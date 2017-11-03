@@ -5,14 +5,15 @@ import com.voxelwind.api.game.Metadata;
 /**
  * This class represents a material.
  */
-public interface ItemType {
-    int getId();
+public interface ItemType
+{
+	int getId ();
 
-    String getName();
+	String getName ();
 
-    boolean isBlock();
+	boolean isBlock ();
 
-    Class<? extends Metadata> getMetadataClass();
+	Class<? extends Metadata> getMetadataClass ();
 
-    int getMaximumStackSize();
+	int getMaximumStackSize ();
 }

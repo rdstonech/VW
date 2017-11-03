@@ -13,37 +13,41 @@ import java.awt.image.BufferedImage;
  */
 @Value
 @Nonnull
-public class Skin {
-    @NonNull
-    private final String skinId;
-    @NonNull
-    private final byte[] skinData;
-    @NonNull
-    private final byte[] capeData;
-    @NonNull
-    private final String geometryName;
-    @NonNull
-    private final byte[] geometryData;
+public class Skin
+{
+	@NonNull
+	private final String skinId;
+	@NonNull
+	private final byte[] skinData;
+	@NonNull
+	private final byte[] capeData;
+	@NonNull
+	private final String geometryName;
+	@NonNull
+	private final byte[] geometryData;
 
-    @Nonnull
-    @ParametersAreNonnullByDefault
-    public static Skin create(BufferedImage image) {
-        Preconditions.checkNotNull(image, "image");
-        Preconditions.checkArgument(image.getHeight() == 32 && image.getWidth() == 64, "Image is not 32x64");
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	public static Skin create (BufferedImage image)
+	{
+		Preconditions.checkNotNull (image, "image");
+		Preconditions.checkArgument (image.getHeight () == 32 && image.getWidth () == 64, "Image is not 32x64");
 
-        byte[] mcpeTexture = new byte[32 * 64 * 4];
+		byte[] mcpeTexture = new byte[32 * 64 * 4];
 
-        int at = 0;
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int i1 = 0; i1 < image.getWidth(); i1++) {
-                int rgb = image.getRGB(i, i1);
-                mcpeTexture[at++] = (byte) ((rgb & 0x00ff0000) >> 16);
-                mcpeTexture[at++] = (byte) ((rgb & 0x0000ff00) >> 8);
-                mcpeTexture[at++] = (byte) (rgb & 0x000000ff);
-                mcpeTexture[at++] = (byte) ((rgb >> 24) & 0xff);
-            }
-        }
+		int at = 0;
+		for (int i = 0; i < image.getHeight (); i++)
+		{
+			for (int i1 = 0; i1 < image.getWidth (); i1++)
+			{
+				int rgb = image.getRGB (i, i1);
+				mcpeTexture[at++] = (byte) ((rgb & 0x00ff0000) >> 16);
+				mcpeTexture[at++] = (byte) ((rgb & 0x0000ff00) >> 8);
+				mcpeTexture[at++] = (byte) (rgb & 0x000000ff);
+				mcpeTexture[at++] = (byte) ((rgb >> 24) & 0xff);
+			}
+		}
 
-        return new Skin("Standard_Custom", mcpeTexture, null, "geometry.humanoid.custom", null);
-    }
+		return new Skin ("Standard_Custom", mcpeTexture, null, "geometry.humanoid.custom", null);
+	}
 }

@@ -9,8 +9,9 @@ import java.lang.annotation.Target;
  * This annotation denotes that this method is an event handler. The method must accept one parameter, which is the
  * desired event class. Event listeners may be run asynchronously.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Listener {
-    int order() default 0;
+@Retention (RetentionPolicy.RUNTIME)
+@Target (ElementType.METHOD)
+public @interface Listener
+{
+	int order () default 0;
 }

@@ -7,11 +7,13 @@ import javax.annotation.Nonnull;
 /**
  * Indicates that an inventory that can be opened.
  */
-public interface OpenableInventory extends Inventory {
-    /**
-     * Returns the position for this inventory.
-     * @return the position
-     */
-    @Nonnull
-    Vector3i getPosition();
+public interface OpenableInventory extends Inventory
+{
+	/**
+	 * Returns the position for this inventory.
+	 *
+	 * @return the position
+	 */
+	@Nonnull
+	Vector3i getPosition ();
 }

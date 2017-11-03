@@ -2,5 +2,6 @@ package com.voxelwind.api.game.entities.passive;
 
 import com.voxelwind.api.game.entities.Entity;
 
-public interface SnowGolem extends Entity {
+public interface SnowGolem extends Entity
+{
 }

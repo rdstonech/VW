@@ -8,11 +8,13 @@ import javax.annotation.Nonnull;
 /**
  * Denotes an event dealing with sessions.
  */
-public interface SessionEvent extends Event {
-    /**
-     * Returns the relevant session in question.
-     * @return the session
-     */
-    @Nonnull
-    Session getSession();
+public interface SessionEvent extends Event
+{
+	/**
+	 * Returns the relevant session in question.
+	 *
+	 * @return the session
+	 */
+	@Nonnull
+	Session getSession ();
 }

@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeSetHealth implements NetworkPackage {
-    private int health;
+public class McpeSetHealth implements NetworkPackage
+{
+	private int health;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		throw new UnsupportedOperationException ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeSigned(buffer, health);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeSigned (buffer, health);
+	}
 }

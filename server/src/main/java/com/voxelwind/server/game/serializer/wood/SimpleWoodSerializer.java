@@ -13,53 +13,64 @@ import com.voxelwind.server.game.serializer.Serializer;
 
 import java.util.Arrays;
 
-public class SimpleWoodSerializer implements Serializer {
-    private static final TreeSpecies[] ALL = TreeSpecies.values();
+public class SimpleWoodSerializer implements Serializer
+{
+	private static final TreeSpecies[] ALL = TreeSpecies.values ();
 
-    @Override
-    public CompoundTag readNBT(BlockState block) {
-        return null;
-    }
+	@Override
+	public CompoundTag readNBT (BlockState block)
+	{
+		return null;
+	}
 
-    @Override
-    public short readMetadata(BlockState block) {
-        Wood wood = getBlockData(block);
-        if (wood != null) {
-            int result = Arrays.binarySearch(ALL, wood.getSpecies(), null);
-            if (result >= 0) {
-                return (short) result;
-            }
-        }
+	@Override
+	public short readMetadata (BlockState block)
+	{
+		Wood wood = getBlockData (block);
+		if (wood != null)
+		{
+			int result = Arrays.binarySearch (ALL, wood.getSpecies (), null);
+			if (result >= 0)
+			{
+				return (short) result;
+			}
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    public CompoundTag readNBT(ItemStack itemStack) {
-        return null;
-    }
+	@Override
+	public CompoundTag readNBT (ItemStack itemStack)
+	{
+		return null;
+	}
 
-    @Override
-    public short readMetadata(ItemStack itemStack) {
-        Wood wood = getItemData(itemStack);
-        if (wood != null) {
-            int result = Arrays.binarySearch(ALL, wood.getSpecies(), null);
-            if (result >= 0) {
-                return (short) result;
-            }
-        }
+	@Override
+	public short readMetadata (ItemStack itemStack)
+	{
+		Wood wood = getItemData (itemStack);
+		if (wood != null)
+		{
+			int result = Arrays.binarySearch (ALL, wood.getSpecies (), null);
+			if (result >= 0)
+			{
+				return (short) result;
+			}
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    public Metadata writeMetadata(ItemType block, short metadata) {
-        Preconditions.checkArgument(metadata >= 0 && metadata < ALL.length, "metadata value %s not between 0 and %s", metadata, ALL.length - 1);
-        return Wood.of(ALL[metadata]);
-    }
+	@Override
+	public Metadata writeMetadata (ItemType block, short metadata)
+	{
+		Preconditions.checkArgument (metadata >= 0 && metadata < ALL.length, "metadata value %s not between 0 and %s", metadata, ALL.length - 1);
+		return Wood.of (ALL[metadata]);
+	}
 
-    @Override
-    public BlockEntity writeNBT(ItemType block, CompoundTag nbtTag) {
-        return null;
-    }
+	@Override
+	public BlockEntity writeNBT (ItemType block, CompoundTag nbtTag)
+	{
+		return null;
+	}
 }

@@ -9,8 +9,10 @@ import com.voxelwind.server.game.entities.Spawnable;
 import com.voxelwind.server.game.level.VoxelwindLevel;
 
 @Spawnable
-public class GhastEntity extends LivingEntity implements Ghast {
-    public GhastEntity(VoxelwindLevel level, Vector3f position, Server server) {
-        super(EntityTypeData.GHAST, level, position, server, 10);
-    }
+public class GhastEntity extends LivingEntity implements Ghast
+{
+	public GhastEntity (VoxelwindLevel level, Vector3f position, Server server)
+	{
+		super (EntityTypeData.GHAST, level, position, server, 10);
+	}
 }

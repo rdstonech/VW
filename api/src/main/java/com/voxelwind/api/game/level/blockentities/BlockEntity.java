@@ -5,6 +5,7 @@ import com.voxelwind.api.game.Metadata;
 /**
  * This interface represents a block entity.
  */
-public interface BlockEntity extends Metadata {
+public interface BlockEntity extends Metadata
+{
 
 }

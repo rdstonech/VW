@@ -8,10 +8,11 @@ import java.util.Optional;
 /**
  * This {@link Component} represents an entity that acts as a vehicle.
  */
-public interface Vehicle {
-    Optional<Entity> getPassenger();
+public interface Vehicle
+{
+	Optional<Entity> getPassenger ();
 
-    void ejectPassenger();
+	void ejectPassenger ();
 
-    void setPassenger(@Nonnull Entity passenger);
+	void setPassenger (@Nonnull Entity passenger);
 }

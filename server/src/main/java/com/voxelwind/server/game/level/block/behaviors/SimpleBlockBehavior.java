@@ -16,45 +16,53 @@ import lombok.NoArgsConstructor;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SimpleBlockBehavior implements BlockBehavior {
-    public static final SimpleBlockBehavior INSTANCE = new SimpleBlockBehavior();
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
+public class SimpleBlockBehavior implements BlockBehavior
+{
+	public static final SimpleBlockBehavior INSTANCE = new SimpleBlockBehavior ();
 
-    @Override
-    public BehaviorResult handleItemInteraction(Server server, Player player, Vector3i against, BlockFace face, ItemStack withItem) {
-        // This is a simple block, so call handlePlacement().
-        return withItem.getItemType().isBlock() && handlePlacement(server, player, against, face, withItem) ?
-                BehaviorResult.PLACE_BLOCK_AND_REMOVE_ITEM : BehaviorResult.NOTHING;
-    }
+	@Override
+	public BehaviorResult handleItemInteraction (Server server, Player player, Vector3i against, BlockFace face, ItemStack withItem)
+	{
+		// This is a simple block, so call handlePlacement().
+		return withItem.getItemType ().isBlock () && handlePlacement (server, player, against, face, withItem) ?
+				BehaviorResult.PLACE_BLOCK_AND_REMOVE_ITEM : BehaviorResult.NOTHING;
+	}
 
-    @Override
-    public boolean handlePlacement(Server server, Player player, Vector3i against, BlockFace face, @Nullable ItemStack withItem) {
-        return player.getInventory().getHeldInventorySlot() != -1;
-    }
+	@Override
+	public boolean handlePlacement (Server server, Player player, Vector3i against, BlockFace face, @Nullable ItemStack withItem)
+	{
+		return player.getInventory ().getHeldInventorySlot () != -1;
+	}
 
-    @Override
-    public boolean handleBreak(Server server, Player player, Block block, @Nullable ItemStack withItem) {
-        if (!block.getBlockState().getBlockType().isDiggable()) {
-            return true;
-        }
+	@Override
+	public boolean handleBreak (Server server, Player player, Block block, @Nullable ItemStack withItem)
+	{
+		if (!block.getBlockState ().getBlockType ().isDiggable ())
+		{
+			return true;
+		}
 
-        // Continue with normal logic.
-        return false;
-    }
+		// Continue with normal logic.
+		return false;
+	}
 
-    @Override
-    public Collection<ItemStack> getDrops(Server server, Player player, Block block, @Nullable ItemStack withItem) {
-        if (!block.getBlockState().getBlockType().isDiggable()) {
-            return ImmutableList.of();
-        }
+	@Override
+	public Collection<ItemStack> getDrops (Server server, Player player, Block block, @Nullable ItemStack withItem)
+	{
+		if (!block.getBlockState ().getBlockType ().isDiggable ())
+		{
+			return ImmutableList.of ();
+		}
 
-        ItemStackBuilder builder = server.createItemStackBuilder()
-                .itemType(block.getBlockState().getBlockType())
-                .amount(1);
-        if (block.getBlockState().getBlockData() != null) {
-            builder.itemData(block.getBlockState().getBlockData());
-        }
+		ItemStackBuilder builder = server.createItemStackBuilder ()
+				.itemType (block.getBlockState ().getBlockType ())
+				.amount (1);
+		if (block.getBlockState ().getBlockData () != null)
+		{
+			builder.itemData (block.getBlockState ().getBlockData ());
+		}
 
-        return ImmutableList.of(builder.build());
-    }
+		return ImmutableList.of (builder.build ());
+	}
 }

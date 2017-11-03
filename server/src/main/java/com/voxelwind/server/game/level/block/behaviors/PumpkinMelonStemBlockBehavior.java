@@ -13,32 +13,37 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Random;
 
-public class PumpkinMelonStemBlockBehavior extends SimpleBlockBehavior {
-    public static final PumpkinMelonStemBlockBehavior PUMPKIN = new PumpkinMelonStemBlockBehavior(ItemTypes.PUMPKIN_SEEDS);
-    public static final PumpkinMelonStemBlockBehavior MELON = new PumpkinMelonStemBlockBehavior(ItemTypes.MELON_SEEDS);
+public class PumpkinMelonStemBlockBehavior extends SimpleBlockBehavior
+{
+	public static final PumpkinMelonStemBlockBehavior PUMPKIN = new PumpkinMelonStemBlockBehavior (ItemTypes.PUMPKIN_SEEDS);
+	public static final PumpkinMelonStemBlockBehavior MELON = new PumpkinMelonStemBlockBehavior (ItemTypes.MELON_SEEDS);
 
-    private static final Random RANDOM = new Random();
-    private final ItemType type;
+	private static final Random RANDOM = new Random ();
+	private final ItemType type;
 
-    private PumpkinMelonStemBlockBehavior(ItemType type) {
-        this.type = type;
-    }
+	private PumpkinMelonStemBlockBehavior (ItemType type)
+	{
+		this.type = type;
+	}
 
-    @Override
-    public Collection<ItemStack> getDrops(Server server, Player player, Block block, @Nullable ItemStack withItem) {
-        Crops crop = (Crops) block.getBlockState().getBlockData();
-        if (crop.isFullyGrown()) {
-            int amount = RANDOM.nextInt(4);
-            if (amount == 0) return ImmutableList.of();
-            return ImmutableList.of(server.createItemStackBuilder()
-                    .itemType(type)
-                    .amount(amount)
-                    .build());
-        } else {
-            return ImmutableList.of(server.createItemStackBuilder()
-                    .itemType(type)
-                    .amount(1)
-                    .build());
-        }
-    }
+	@Override
+	public Collection<ItemStack> getDrops (Server server, Player player, Block block, @Nullable ItemStack withItem)
+	{
+		Crops crop = (Crops) block.getBlockState ().getBlockData ();
+		if (crop.isFullyGrown ())
+		{
+			int amount = RANDOM.nextInt (4);
+			if (amount == 0) return ImmutableList.of ();
+			return ImmutableList.of (server.createItemStackBuilder ()
+					.itemType (type)
+					.amount (amount)
+					.build ());
+		} else
+		{
+			return ImmutableList.of (server.createItemStackBuilder ()
+					.itemType (type)
+					.amount (1)
+					.build ());
+		}
+	}
 }

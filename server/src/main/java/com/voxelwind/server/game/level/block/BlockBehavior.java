@@ -14,22 +14,29 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface BlockBehavior {
-    boolean handlePlacement(Server server, Player player, Vector3i against, BlockFace face, @Nullable ItemStack withItem);
-    BehaviorResult handleItemInteraction(Server server, Player player, Vector3i against, BlockFace face, ItemStack withItem);
-    boolean handleBreak(Server server, Player player, Block block, @Nullable ItemStack withItem);
-    Collection<ItemStack> getDrops(Server server, Player player, Block block, @Nullable ItemStack withItem);
+public interface BlockBehavior
+{
+	boolean handlePlacement (Server server, Player player, Vector3i against, BlockFace face, @Nullable ItemStack withItem);
 
-    default BoundingBox getBoundingBox(Block block) {
-        Vector3f asFloat = block.getLevelLocation().toFloat();
-        return new BoundingBox(asFloat, asFloat.add(1, 1, 1));
-    }
+	BehaviorResult handleItemInteraction (Server server, Player player, Vector3i against, BlockFace face, ItemStack withItem);
 
-    default Optional<BlockState> overrideBlockPlacement(Vector3i against, BlockFace face, ItemStack itemStack) {
-        return Optional.empty();
-    }
+	boolean handleBreak (Server server, Player player, Block block, @Nullable ItemStack withItem);
 
-    default boolean handleBlockTick(Server server, Block block) {
-        return true;
-    }
+	Collection<ItemStack> getDrops (Server server, Player player, Block block, @Nullable ItemStack withItem);
+
+	default BoundingBox getBoundingBox (Block block)
+	{
+		Vector3f asFloat = block.getLevelLocation ().toFloat ();
+		return new BoundingBox (asFloat, asFloat.add (1, 1, 1));
+	}
+
+	default Optional<BlockState> overrideBlockPlacement (Vector3i against, BlockFace face, ItemStack itemStack)
+	{
+		return Optional.empty ();
+	}
+
+	default boolean handleBlockTick (Server server, Block block)
+	{
+		return true;
+	}
 }

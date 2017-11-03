@@ -7,12 +7,13 @@ import java.util.Optional;
 /**
  * Specifies a player inventory.
  */
-public interface PlayerInventory extends Inventory {
-    int[] getHotbarLinks();
+public interface PlayerInventory extends Inventory
+{
+	int[] getHotbarLinks ();
 
-    int getHeldHotbarSlot();
+	int getHeldHotbarSlot ();
 
-    int getHeldInventorySlot();
+	int getHeldInventorySlot ();
 
-    Optional<ItemStack> getStackInHand();
+	Optional<ItemStack> getStackInHand ();
 }

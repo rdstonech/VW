@@ -11,19 +11,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
-public class McpeUpdateAttributes implements NetworkPackage {
-    private long runtimeEntityId;
-    private final Collection<PlayerAttribute> attributes = new ArrayList<>();
+public class McpeUpdateAttributes implements NetworkPackage
+{
+	private long runtimeEntityId;
+	private final Collection<PlayerAttribute> attributes = new ArrayList<> ();
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        runtimeEntityId = Varints.decodeUnsigned(buffer);
-        attributes.addAll(McpeUtil.readPlayerAttributes(buffer));
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		runtimeEntityId = Varints.decodeUnsigned (buffer);
+		attributes.addAll (McpeUtil.readPlayerAttributes (buffer));
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, runtimeEntityId);
-        McpeUtil.writePlayerAttributes(buffer, attributes);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, runtimeEntityId);
+		McpeUtil.writePlayerAttributes (buffer, attributes);
+	}
 }

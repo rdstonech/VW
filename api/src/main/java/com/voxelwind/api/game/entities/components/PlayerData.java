@@ -9,60 +9,61 @@ import javax.annotation.Nonnull;
 /**
  * Represents data associated with a player.
  */
-public interface PlayerData extends Component {
-    Skin getSkin();
+public interface PlayerData extends Component
+{
+	Skin getSkin ();
 
-    @Nonnull
-    GameMode getGameMode();
+	@Nonnull
+	GameMode getGameMode ();
 
-    void setGameMode(@Nonnull GameMode mode);
+	void setGameMode (@Nonnull GameMode mode);
 
-    float getBaseSpeed();
+	float getBaseSpeed ();
 
-    void setBaseSpeed(float baseSpeed);
+	void setBaseSpeed (float baseSpeed);
 
-    @Nonnegative
-    int getHunger();
+	@Nonnegative
+	int getHunger ();
 
-    void setHunger(@Nonnegative int hunger);
+	void setHunger (@Nonnegative int hunger);
 
-    float getSaturation();
+	float getSaturation ();
 
-    void setSaturation(@Nonnegative float saturation);
+	void setSaturation (@Nonnegative float saturation);
 
-    float getExhaustion();
+	float getExhaustion ();
 
-    void setExhaustion(@Nonnegative float exhaustion);
+	void setExhaustion (@Nonnegative float exhaustion);
 
-    boolean isFlying();
+	boolean isFlying ();
 
-    void setFlying(boolean flying);
+	void setFlying (boolean flying);
 
-    boolean isAllowedToFly();
+	boolean isAllowedToFly ();
 
-    void setAllowedToFly(boolean allowedToFly);
+	void setAllowedToFly (boolean allowedToFly);
 
-    boolean isImmutableWorld();
+	boolean isImmutableWorld ();
 
-    void setImmutableWorld(boolean immutableWorld);
+	void setImmutableWorld (boolean immutableWorld);
 
-    boolean canPvP();
+	boolean canPvP ();
 
-    void setPvP(boolean pvp);
+	void setPvP (boolean pvp);
 
-    boolean canAutoJump();
+	boolean canAutoJump ();
 
-    void setAutoJump(boolean autoJump);
+	void setAutoJump (boolean autoJump);
 
-    boolean canNoClip();
+	boolean canNoClip ();
 
-    void setNoClip(boolean noClip);
+	void setNoClip (boolean noClip);
 
-    boolean isWorldBuilder();
+	boolean isWorldBuilder ();
 
-    void setWorldBuilder(boolean worldBuilder);
+	void setWorldBuilder (boolean worldBuilder);
 
-    boolean isMuted();
+	boolean isMuted ();
 
-    void setMuted(boolean muted);
+	void setMuted (boolean muted);
 }

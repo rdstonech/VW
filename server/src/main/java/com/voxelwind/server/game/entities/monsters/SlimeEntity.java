@@ -9,8 +9,10 @@ import com.voxelwind.server.game.entities.Spawnable;
 import com.voxelwind.server.game.level.VoxelwindLevel;
 
 @Spawnable
-public class SlimeEntity extends LivingEntity implements Slime {
-    public SlimeEntity(VoxelwindLevel level, Vector3f position, Server server) {
-        super(EntityTypeData.SLIME, level, position, server, 16);
-    }
+public class SlimeEntity extends LivingEntity implements Slime
+{
+	public SlimeEntity (VoxelwindLevel level, Vector3f position, Server server)
+	{
+		super (EntityTypeData.SLIME, level, position, server, 16);
+	}
 }

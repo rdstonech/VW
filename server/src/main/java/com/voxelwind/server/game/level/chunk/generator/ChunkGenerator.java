@@ -5,6 +5,7 @@ import com.voxelwind.api.game.level.Level;
 
 import java.util.Random;
 
-public interface ChunkGenerator {
-    void generate(Level level, Chunk chunk, Random random);
+public interface ChunkGenerator
+{
+	void generate (Level level, Chunk chunk, Random random);
 }

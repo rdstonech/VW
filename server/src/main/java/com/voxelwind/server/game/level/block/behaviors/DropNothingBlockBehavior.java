@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DropNothingBlockBehavior extends SimpleBlockBehavior {
-    public static final DropNothingBlockBehavior INSTANCE = new DropNothingBlockBehavior();
+@NoArgsConstructor (access = AccessLevel.PRIVATE)
+public class DropNothingBlockBehavior extends SimpleBlockBehavior
+{
+	public static final DropNothingBlockBehavior INSTANCE = new DropNothingBlockBehavior ();
 
-    @Override
-    public Collection<ItemStack> getDrops(Server server, Player player, Block block, @Nullable ItemStack withItem) {
-        return ImmutableList.of();
-    }
+	@Override
+	public Collection<ItemStack> getDrops (Server server, Player player, Block block, @Nullable ItemStack withItem)
+	{
+		return ImmutableList.of ();
+	}
 }

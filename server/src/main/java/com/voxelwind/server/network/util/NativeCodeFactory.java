@@ -13,8 +13,9 @@ import net.md_5.bungee.jni.zlib.JavaZlib;
 import net.md_5.bungee.jni.zlib.NativeZlib;
 
 @UtilityClass
-public class NativeCodeFactory {
-    public static final NativeCode<BungeeZlib> zlib = new NativeCode("native-compress", JavaZlib.class, NativeZlib.class);
-    public static final NativeCode<BungeeCipher> cipher = new NativeCode("native-cipher", JavaCipher.class, NativeCipher.class);
-    public static final NativeCode<VoxelwindHash> hash = new NativeCode("native-hash", JavaHash.class, NativeHash.class);
+public class NativeCodeFactory
+{
+	public static final NativeCode<BungeeZlib> zlib = new NativeCode ("native-compress", JavaZlib.class, NativeZlib.class);
+	public static final NativeCode<BungeeCipher> cipher = new NativeCode ("native-cipher", JavaCipher.class, NativeCipher.class);
+	public static final NativeCode<VoxelwindHash> hash = new NativeCode ("native-hash", JavaHash.class, NativeHash.class);
 }

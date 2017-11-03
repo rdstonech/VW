@@ -10,16 +10,19 @@ import lombok.Data;
 
 @ForceClearText
 @Data
-public class McpeServerToClientHandshake implements NetworkPackage {
-    private String payload;
+public class McpeServerToClientHandshake implements NetworkPackage
+{
+	private String payload;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        payload = McpeUtil.readVarintLengthString(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		payload = McpeUtil.readVarintLengthString (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        McpeUtil.writeVarintLengthString(buffer, payload);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		McpeUtil.writeVarintLengthString (buffer, payload);
+	}
 }

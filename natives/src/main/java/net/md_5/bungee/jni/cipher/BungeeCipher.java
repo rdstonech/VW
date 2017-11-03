@@ -12,11 +12,11 @@ import java.security.GeneralSecurityException;
 public interface BungeeCipher
 {
 
-    void init(boolean forEncryption, SecretKey key, byte[] iv) throws GeneralSecurityException;
+	void init (boolean forEncryption, SecretKey key, byte[] iv) throws GeneralSecurityException;
 
-    void free();
+	void free ();
 
-    void cipher(ByteBuf in, ByteBuf out) throws GeneralSecurityException;
+	void cipher (ByteBuf in, ByteBuf out) throws GeneralSecurityException;
 
-    ByteBuf cipher(ChannelHandlerContext ctx, ByteBuf in) throws GeneralSecurityException;
+	ByteBuf cipher (ChannelHandlerContext ctx, ByteBuf in) throws GeneralSecurityException;
 }

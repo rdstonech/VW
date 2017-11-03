@@ -8,26 +8,31 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeInventoryContent implements NetworkPackage {
-    private int inventoryId;
-    private ItemStack[] stacks;
+public class McpeInventoryContent implements NetworkPackage
+{
+	private int inventoryId;
+	private ItemStack[] stacks;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        inventoryId = (int) Varints.decodeUnsigned(buffer);
-        int stacksToRead = (int) Varints.decodeUnsigned(buffer);
-        stacks = new ItemStack[stacksToRead];
-        for (int i = 0; i < stacksToRead; i++) {
-            stacks[i] = McpeUtil.readItemStack(buffer);
-        }
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		inventoryId = (int) Varints.decodeUnsigned (buffer);
+		int stacksToRead = (int) Varints.decodeUnsigned (buffer);
+		stacks = new ItemStack[stacksToRead];
+		for (int i = 0; i < stacksToRead; i++)
+		{
+			stacks[i] = McpeUtil.readItemStack (buffer);
+		}
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, inventoryId);
-        Varints.encodeUnsigned(buffer, stacks.length);
-        for (ItemStack stack : stacks) {
-            McpeUtil.writeItemStack(buffer, stack);
-        }
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, inventoryId);
+		Varints.encodeUnsigned (buffer, stacks.length);
+		for (ItemStack stack : stacks)
+		{
+			McpeUtil.writeItemStack (buffer, stack);
+		}
+	}
 }

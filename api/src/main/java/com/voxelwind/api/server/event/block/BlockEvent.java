@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
 /**
  * This interface is implemented by block-related events.
  */
-public interface BlockEvent extends Event {
-    @Nonnull
-    Block getCurrentBlock();
+public interface BlockEvent extends Event
+{
+	@Nonnull
+	Block getCurrentBlock ();
 }

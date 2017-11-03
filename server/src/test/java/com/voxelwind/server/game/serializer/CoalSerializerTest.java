@@ -7,12 +7,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CoalSerializerTest extends SerializerTestBase {
-    @Test
-    public void checkNBTOutput() throws Exception {
-        VoxelwindItemStack itemStack = new VoxelwindItemStack(ItemTypes.COAL, 1, Coal.CHARCOAL);
+public class CoalSerializerTest extends SerializerTestBase
+{
+	@Test
+	public void checkNBTOutput () throws Exception
+	{
+		VoxelwindItemStack itemStack = new VoxelwindItemStack (ItemTypes.COAL, 1, Coal.CHARCOAL);
 
-        short data = MetadataSerializer.serializeMetadata(itemStack);
-        assertEquals(data, 1);
-    }
+		short data = MetadataSerializer.serializeMetadata (itemStack);
+		assertEquals (data, 1);
+	}
 }

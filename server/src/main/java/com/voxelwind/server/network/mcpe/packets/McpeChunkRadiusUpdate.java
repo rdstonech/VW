@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeChunkRadiusUpdate implements NetworkPackage {
-    private int radius;
-
-    @Override
-    public void decode(ByteBuf buffer) {
-        radius = Varints.decodeSigned(buffer);
-    }
-
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeSigned(buffer, radius);
-    }
+public class McpeChunkRadiusUpdate implements NetworkPackage
+{
+	private int radius;
+	
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		radius = Varints.decodeSigned (buffer);
+	}
+	
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeSigned (buffer, radius);
+	}
 }

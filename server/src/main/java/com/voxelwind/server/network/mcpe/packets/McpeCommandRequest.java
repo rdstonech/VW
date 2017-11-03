@@ -7,20 +7,23 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeCommandRequest implements NetworkPackage {
-    private String command;
-    private CommandOriginData originData;
-    private boolean internal;
+public class McpeCommandRequest implements NetworkPackage
+{
+	private String command;
+	private CommandOriginData originData;
+	private boolean internal;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        command = McpeUtil.readVarintLengthString(buffer);
-        originData = McpeUtil.readCommandOriginData(buffer);
-        internal = buffer.readBoolean();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		command = McpeUtil.readVarintLengthString (buffer);
+		originData = McpeUtil.readCommandOriginData (buffer);
+		internal = buffer.readBoolean ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		throw new UnsupportedOperationException ();
+	}
 }

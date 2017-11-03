@@ -8,21 +8,25 @@ import lombok.Data;
 
 @Data
 @ForceClearText
-public class McpeDisconnect implements NetworkPackage {
-    private boolean hideDisconnectionScreen;
-    private String message;
+public class McpeDisconnect implements NetworkPackage
+{
+	private boolean hideDisconnectionScreen;
+	private String message;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        hideDisconnectionScreen = buffer.readBoolean();
-        message = McpeUtil.readVarintLengthString(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		hideDisconnectionScreen = buffer.readBoolean ();
+		message = McpeUtil.readVarintLengthString (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        buffer.writeBoolean(hideDisconnectionScreen);
-        if (!hideDisconnectionScreen) {
-            McpeUtil.writeVarintLengthString(buffer, message);
-        }
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		buffer.writeBoolean (hideDisconnectionScreen);
+		if (!hideDisconnectionScreen)
+		{
+			McpeUtil.writeVarintLengthString (buffer, message);
+		}
+	}
 }

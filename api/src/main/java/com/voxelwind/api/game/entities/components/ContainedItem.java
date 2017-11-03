@@ -5,10 +5,12 @@ import com.voxelwind.api.game.item.ItemStack;
 /**
  * A {@link Component} that holds a single {@link ItemStack}.
  */
-public interface ContainedItem extends Component {
-    /**
-     * Returns the contained item stack.
-     * @return the item stack contained
-     */
-    ItemStack getItemStack();
+public interface ContainedItem extends Component
+{
+	/**
+	 * Returns the contained item stack.
+	 *
+	 * @return the item stack contained
+	 */
+	ItemStack getItemStack ();
 }

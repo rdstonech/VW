@@ -9,19 +9,22 @@ import lombok.Data;
 @ForceClearText
 @DisallowWrapping
 @Data
-public class ConnectedPongPacket implements NetworkPackage {
-    private long pingTime;
-    private long pongTime;
+public class ConnectedPongPacket implements NetworkPackage
+{
+	private long pingTime;
+	private long pongTime;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        pingTime = buffer.readLong();
-        pongTime = buffer.readLong();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		pingTime = buffer.readLong ();
+		pongTime = buffer.readLong ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        buffer.writeLong(pingTime);
-        buffer.writeLong(pongTime);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		buffer.writeLong (pingTime);
+		buffer.writeLong (pongTime);
+	}
 }

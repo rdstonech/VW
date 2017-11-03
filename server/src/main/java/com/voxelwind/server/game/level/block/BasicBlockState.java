@@ -11,29 +11,34 @@ import java.util.Optional;
 /**
  * This class implements a "simple" block state that only contains a block type.
  */
-public class BasicBlockState implements BlockState {
-    private final BlockType type;
-    private final Metadata data;
-    private final BlockEntity blockEntity;
+public class BasicBlockState implements BlockState
+{
+	private final BlockType type;
+	private final Metadata data;
+	private final BlockEntity blockEntity;
 
-    public BasicBlockState(BlockType type, Metadata data, BlockEntity blockEntity) {
-        this.type = Preconditions.checkNotNull(type, "type");
-        this.data = data;
-        this.blockEntity = blockEntity;
-    }
+	public BasicBlockState (BlockType type, Metadata data, BlockEntity blockEntity)
+	{
+		this.type = Preconditions.checkNotNull (type, "type");
+		this.data = data;
+		this.blockEntity = blockEntity;
+	}
 
-    @Override
-    public BlockType getBlockType() {
-        return type;
-    }
+	@Override
+	public BlockType getBlockType ()
+	{
+		return type;
+	}
 
-    @Override
-    public Metadata getBlockData() {
-        return data;
-    }
+	@Override
+	public Metadata getBlockData ()
+	{
+		return data;
+	}
 
-    @Override
-    public Optional<BlockEntity> getBlockEntity() {
-        return Optional.ofNullable(blockEntity);
-    }
+	@Override
+	public Optional<BlockEntity> getBlockEntity ()
+	{
+		return Optional.ofNullable (blockEntity);
+	}
 }

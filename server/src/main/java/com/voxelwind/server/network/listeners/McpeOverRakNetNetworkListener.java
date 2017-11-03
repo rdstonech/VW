@@ -24,86 +24,105 @@ import lombok.extern.log4j.Log4j2;
 import java.net.InetSocketAddress;
 
 @Log4j2
-public class McpeOverRakNetNetworkListener extends ChannelInitializer<DatagramChannel> implements NetworkListener {
-    private final Bootstrap bootstrap;
-    private final InetSocketAddress address;
-    private final VoxelwindServer server;
-    private final boolean useSoReuseport;
-    private DatagramChannel channel;
-
-    public McpeOverRakNetNetworkListener(VoxelwindServer voxelwindServer, String host, int port, boolean useSoReuseport) {
-        this.server = voxelwindServer;
-        this.address = new InetSocketAddress(host, port);
-        this.useSoReuseport = useSoReuseport;
-        if (Epoll.isAvailable()) {
-            bootstrap = new Bootstrap()
-                    .channel(EpollDatagramChannel.class)
-                    .group(new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Voxelwind MCPE Listener - #%d").build()))
-                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                    .handler(this);
-            if (useSoReuseport) {
-                bootstrap.option(EpollChannelOption.SO_REUSEPORT, true);
-            }
-        } else {
-            bootstrap = new Bootstrap()
-                    .channel(NioDatagramChannel.class)
-                    .group(new NioEventLoopGroup(0, new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Voxelwind MCPE Listener - #%d").build()))
-                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                    .handler(this);
-        }
-    }
-
-    @Override
-    protected void initChannel(DatagramChannel channel) throws Exception {
-        this.channel = channel;
-        channel.pipeline()
-                .addLast("simpleRaknetHandler", new SimpleRakNetPacketCodec())
-                .addLast("raknetDirectPacketHandler", new RakNetDirectPacketHandler(server))
-                .addLast("raknetDatagramHandler", new DatagramRakNetPacketCodec(server))
-                .addLast("voxelwindDatagramHandler", new RakNetDatagramHandler(server))
-                .addLast("tailHandler", new TailHandler());
-    }
-
-    @Override
-    public boolean bind() {
-        boolean success = false;
-        if (Epoll.isAvailable() && useSoReuseport) {
-            // Can use SO_REUSEPORT so that multiple threads can bind to a port.
-            for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
-                try {
-                    ChannelFuture future = bootstrap.bind(address).await();
-                    if (future.isSuccess()) {
-                        log.debug("Bound listener #" + i + " for " + address);
-                        success = true;
-                    } else {
-                        log.error("Unable to bind listener #" + i + " for " + address, future.cause());
-                        // Continue - as long as we have at least one listener open, we're okay.
-                    }
-                } catch (InterruptedException e) {
-                    log.info("Interrupted while waiting for bind");
-                }
-            }
-            return success;
-        } else {
-            try {
-                ChannelFuture future = bootstrap.bind(address).await();
-                return future.isSuccess();
-            } catch (InterruptedException e) {
-                log.info("Interrupted while waiting for bind");
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void close() {
-        bootstrap.group().shutdownGracefully();
-        if (channel != null) {
-            channel.close().syncUninterruptibly();
-        }
-    }
-
-    public InetSocketAddress getAddress() {
-        return address;
-    }
+public class McpeOverRakNetNetworkListener extends ChannelInitializer<DatagramChannel> implements NetworkListener
+{
+	private final Bootstrap bootstrap;
+	private final InetSocketAddress address;
+	private final VoxelwindServer server;
+	private final boolean useSoReuseport;
+	private DatagramChannel channel;
+	
+	public McpeOverRakNetNetworkListener (VoxelwindServer voxelwindServer, String host, int port, boolean useSoReuseport)
+	{
+		this.server = voxelwindServer;
+		this.address = new InetSocketAddress (host, port);
+		this.useSoReuseport = useSoReuseport;
+		if (Epoll.isAvailable ())
+		{
+			bootstrap = new Bootstrap ()
+					.channel (EpollDatagramChannel.class)
+					.group (new EpollEventLoopGroup (0, new ThreadFactoryBuilder ().setDaemon (true).setNameFormat ("Voxelwind MCPE Listener - #%d").build ()))
+					.option (ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+					.handler (this);
+			if (useSoReuseport)
+			{
+				bootstrap.option (EpollChannelOption.SO_REUSEPORT, true);
+			}
+		} else
+		{
+			bootstrap = new Bootstrap ()
+					.channel (NioDatagramChannel.class)
+					.group (new NioEventLoopGroup (0, new ThreadFactoryBuilder ().setDaemon (true).setNameFormat ("Voxelwind MCPE Listener - #%d").build ()))
+					.option (ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+					.handler (this);
+		}
+	}
+	
+	@Override
+	protected void initChannel (DatagramChannel channel) throws Exception
+	{
+		this.channel = channel;
+		channel.pipeline ()
+				.addLast ("simpleRaknetHandler", new SimpleRakNetPacketCodec ())
+				.addLast ("raknetDirectPacketHandler", new RakNetDirectPacketHandler (server))
+				.addLast ("raknetDatagramHandler", new DatagramRakNetPacketCodec (server))
+				.addLast ("voxelwindDatagramHandler", new RakNetDatagramHandler (server))
+				.addLast ("tailHandler", new TailHandler ());
+	}
+	
+	@Override
+	public boolean bind ()
+	{
+		boolean success = false;
+		if (Epoll.isAvailable () && useSoReuseport)
+		{
+			// Can use SO_REUSEPORT so that multiple threads can bind to a port.
+			for (int i = 0; i < Runtime.getRuntime ().availableProcessors (); i++)
+			{
+				try
+				{
+					ChannelFuture future = bootstrap.bind (address).await ();
+					if (future.isSuccess ())
+					{
+						log.debug ("Bound listener #" + i + " for " + address);
+						success = true;
+					} else
+					{
+						log.error ("Unable to bind listener #" + i + " for " + address, future.cause ());
+						// Continue - as long as we have at least one listener open, we're okay.
+					}
+				} catch (InterruptedException e)
+				{
+					log.info ("Interrupted while waiting for bind");
+				}
+			}
+			return success;
+		} else
+		{
+			try
+			{
+				ChannelFuture future = bootstrap.bind (address).await ();
+				return future.isSuccess ();
+			} catch (InterruptedException e)
+			{
+				log.info ("Interrupted while waiting for bind");
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public void close ()
+	{
+		bootstrap.group ().shutdownGracefully ();
+		if (channel != null)
+		{
+			channel.close ().syncUninterruptibly ();
+		}
+	}
+	
+	public InetSocketAddress getAddress ()
+	{
+		return address;
+	}
 }

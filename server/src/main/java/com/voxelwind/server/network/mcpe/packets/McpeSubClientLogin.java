@@ -8,23 +8,26 @@ import io.netty.util.AsciiString;
 import lombok.Data;
 
 @Data
-public class McpeSubClientLogin implements NetworkPackage{
+public class McpeSubClientLogin implements NetworkPackage
+{
 
-    private AsciiString chainData;
-    private AsciiString skinData;
+	private AsciiString chainData;
+	private AsciiString skinData;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        int bodyLength = (int) Varints.decodeUnsigned(buffer);
-        ByteBuf body = buffer.readSlice(bodyLength);
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		int bodyLength = (int) Varints.decodeUnsigned (buffer);
+		ByteBuf body = buffer.readSlice (bodyLength);
 
-        chainData = McpeUtil.readLELengthAsciiString(body);
-        skinData = McpeUtil.readLELengthAsciiString(body);
-    }
+		chainData = McpeUtil.readLELengthAsciiString (body);
+		skinData = McpeUtil.readLELengthAsciiString (body);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        McpeUtil.writeLELengthAsciiString(buffer, chainData);
-        McpeUtil.writeLELengthAsciiString(buffer, skinData);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		McpeUtil.writeLELengthAsciiString (buffer, chainData);
+		McpeUtil.writeLELengthAsciiString (buffer, skinData);
+	}
 }

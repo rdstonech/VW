@@ -10,20 +10,24 @@ import com.voxelwind.api.server.command.CommandExecutorSource;
 import com.voxelwind.server.game.item.VoxelwindItemStack;
 import com.voxelwind.server.game.serializer.MetadataSerializer;
 
-public class GiveCommand implements CommandExecutor {
-    @Override
-    public void execute(CommandExecutorSource source, String[] args) throws Exception {
-        if (source instanceof Player) {
-            if (args.length == 0) {
-                ((Player) source).sendMessage(TextFormat.RED + "/give <item ID> <amount> <data>");
-                return;
-            }
+public class GiveCommand implements CommandExecutor
+{
+	@Override
+	public void execute (CommandExecutorSource source, String[] args) throws Exception
+	{
+		if (source instanceof Player)
+		{
+			if (args.length == 0)
+			{
+				((Player) source).sendMessage (TextFormat.RED + "/give <item ID> <amount> <data>");
+				return;
+			}
 
-            int id = Integer.parseInt(args[0]);
-            int amount = args.length >= 2 ? Integer.parseInt(args[1]) : 1;
-            ItemType type = ItemTypes.forId(id);
-            Metadata metadata = args.length >= 3 ? MetadataSerializer.deserializeMetadata(type, Short.parseShort(args[2])) : null;
-            ((Player) source).getInventory().addItem(new VoxelwindItemStack(type, amount, metadata, null));
-        }
-    }
+			int id = Integer.parseInt (args[0]);
+			int amount = args.length >= 2 ? Integer.parseInt (args[1]) : 1;
+			ItemType type = ItemTypes.forId (id);
+			Metadata metadata = args.length >= 3 ? MetadataSerializer.deserializeMetadata (type, Short.parseShort (args[2])) : null;
+			((Player) source).getInventory ().addItem (new VoxelwindItemStack (type, amount, metadata, null));
+		}
+	}
 }

@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeRemoveEntity implements NetworkPackage {
-    private long entityId;
+public class McpeRemoveEntity implements NetworkPackage
+{
+	private long entityId;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        entityId = Varints.decodeSignedLong(buffer);
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		entityId = Varints.decodeSignedLong (buffer);
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeSignedLong(buffer, entityId);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeSignedLong (buffer, entityId);
+	}
 }

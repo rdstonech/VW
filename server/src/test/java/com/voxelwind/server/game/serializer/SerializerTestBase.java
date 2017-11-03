@@ -11,27 +11,34 @@ import java.util.Optional;
  * @author geNAZt
  * @version 1.0
  */
-class SerializerTestBase {
-    BlockState generateTestBlockState( BlockType blockType, BlockEntity blockEntity ) {
-        return generateTestBlockState(blockType, blockEntity, null);
-    }
+class SerializerTestBase
+{
+	BlockState generateTestBlockState (BlockType blockType, BlockEntity blockEntity)
+	{
+		return generateTestBlockState (blockType, blockEntity, null);
+	}
 
-    BlockState generateTestBlockState( BlockType blockType, BlockEntity blockEntity, Metadata metadata ) {
-        return new BlockState() {
-            @Override
-            public BlockType getBlockType() {
-                return blockType;
-            }
+	BlockState generateTestBlockState (BlockType blockType, BlockEntity blockEntity, Metadata metadata)
+	{
+		return new BlockState ()
+		{
+			@Override
+			public BlockType getBlockType ()
+			{
+				return blockType;
+			}
 
-            @Override
-            public Metadata getBlockData() {
-                return metadata;
-            }
+			@Override
+			public Metadata getBlockData ()
+			{
+				return metadata;
+			}
 
-            @Override
-            public Optional<BlockEntity> getBlockEntity() {
-                return Optional.ofNullable(blockEntity);
-            }
-        };
-    }
+			@Override
+			public Optional<BlockEntity> getBlockEntity ()
+			{
+				return Optional.ofNullable (blockEntity);
+			}
+		};
+	}
 }

@@ -8,11 +8,13 @@ import javax.annotation.Nonnull;
 /**
  * Denotes an event dealing with a player.
  */
-public interface PlayerEvent extends Event {
-    /**
-     * Returns the relevant player in question.
-     * @return the player
-     */
-    @Nonnull
-    Player getPlayer();
+public interface PlayerEvent extends Event
+{
+	/**
+	 * Returns the relevant player in question.
+	 *
+	 * @return the player
+	 */
+	@Nonnull
+	Player getPlayer ();
 }

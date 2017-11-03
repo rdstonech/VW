@@ -6,16 +6,19 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
 @Data
-public class McpeSetDifficulty implements NetworkPackage{
-    private int difficulty;
+public class McpeSetDifficulty implements NetworkPackage
+{
+	private int difficulty;
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		throw new UnsupportedOperationException ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        Varints.encodeUnsigned(buffer, difficulty);
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		Varints.encodeUnsigned (buffer, difficulty);
+	}
 }

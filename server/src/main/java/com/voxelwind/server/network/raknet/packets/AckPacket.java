@@ -1,4 +1,5 @@
 package com.voxelwind.server.network.raknet.packets;
 
-public class AckPacket extends BaseAckPacket {
+public class AckPacket extends BaseAckPacket
+{
 }

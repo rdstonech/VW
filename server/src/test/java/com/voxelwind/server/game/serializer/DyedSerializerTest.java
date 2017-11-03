@@ -8,12 +8,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DyedSerializerTest extends SerializerTestBase {
-    @Test
-    public void checkNBTOutput() throws Exception {
-        VoxelwindItemStack itemStack = new VoxelwindItemStack(BlockTypes.WOOL, 1, Dyed.of(DyeColor.BLACK));
+public class DyedSerializerTest extends SerializerTestBase
+{
+	@Test
+	public void checkNBTOutput () throws Exception
+	{
+		VoxelwindItemStack itemStack = new VoxelwindItemStack (BlockTypes.WOOL, 1, Dyed.of (DyeColor.BLACK));
 
-        short data = MetadataSerializer.serializeMetadata(itemStack);
-        assertEquals(data, 15);
-    }
+		short data = MetadataSerializer.serializeMetadata (itemStack);
+		assertEquals (data, 15);
+	}
 }

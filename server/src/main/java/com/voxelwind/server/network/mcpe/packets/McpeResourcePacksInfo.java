@@ -10,26 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class McpeResourcePacksInfo implements NetworkPackage {
-    private boolean mustAccept;
-    private final List<ResourcePackInfo> behaviorPacks = new ArrayList<>();
-    private final List<ResourcePackInfo> resourcePacks = new ArrayList<>();
+public class McpeResourcePacksInfo implements NetworkPackage
+{
+	private boolean mustAccept;
+	private final List<ResourcePackInfo> behaviorPacks = new ArrayList<> ();
+	private final List<ResourcePackInfo> resourcePacks = new ArrayList<> ();
 
-    @Override
-    public void decode(ByteBuf buffer) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void decode (ByteBuf buffer)
+	{
+		throw new UnsupportedOperationException ();
+	}
 
-    @Override
-    public void encode(ByteBuf buffer) {
-        buffer.writeBoolean(mustAccept);
-        buffer.writeShort(behaviorPacks.size());
-        for (ResourcePackInfo behaviorPack : behaviorPacks) {
-            McpeUtil.writeResourcePackInfo(buffer, behaviorPack);
-        }
-        buffer.writeShort(resourcePacks.size());
-        for (ResourcePackInfo resourcePack : resourcePacks) {
-            McpeUtil.writeResourcePackInfo(buffer, resourcePack);
-        }
-    }
+	@Override
+	public void encode (ByteBuf buffer)
+	{
+		buffer.writeBoolean (mustAccept);
+		buffer.writeShort (behaviorPacks.size ());
+		for (ResourcePackInfo behaviorPack : behaviorPacks)
+		{
+			McpeUtil.writeResourcePackInfo (buffer, behaviorPack);
+		}
+		buffer.writeShort (resourcePacks.size ());
+		for (ResourcePackInfo resourcePack : resourcePacks)
+		{
+			McpeUtil.writeResourcePackInfo (buffer, resourcePack);
+		}
+	}
 }

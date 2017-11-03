@@ -2,5 +2,6 @@ package com.voxelwind.api.game.entities.passive;
 
 import com.voxelwind.api.game.entities.Entity;
 
-public interface Chicken extends Entity {
+public interface Chicken extends Entity
+{
 }

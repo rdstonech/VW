@@ -9,8 +9,10 @@ import com.voxelwind.server.game.entities.Spawnable;
 import com.voxelwind.server.game.level.VoxelwindLevel;
 
 @Spawnable
-public class CreeperEntity extends LivingEntity implements Creeper {
-    public CreeperEntity(VoxelwindLevel level, Vector3f position, Server server) {
-        super(EntityTypeData.CREEPER, level, position, server, 20);
-    }
+public class CreeperEntity extends LivingEntity implements Creeper
+{
+	public CreeperEntity (VoxelwindLevel level, Vector3f position, Server server)
+	{
+		super (EntityTypeData.CREEPER, level, position, server, 20);
+	}
 }
