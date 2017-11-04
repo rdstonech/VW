@@ -54,30 +54,26 @@ public class CompressionUtil
 		{
 			decompressed = CompressionUtil.inflate (buffer);
 			// Now process the decompressed result.
-			
-			if (decompressed != null)
+			while (decompressed.isReadable ())
 			{
-				while (decompressed.isReadable ())
+				int length = (int) Varints.decodeUnsigned (decompressed);
+				ByteBuf data = decompressed.readSlice (length);
+
+				if (data.readableBytes () == 0)
 				{
-					int length = (int) Varints.decodeUnsigned (decompressed);
-					ByteBuf data = decompressed.readSlice (length);
-					
-					if (data.readableBytes () == 0)
-					{
-						throw new DataFormatException ("Contained packet is empty.");
-					}
-					
-					NetworkPackage pkg = PacketRegistry.tryDecode (data, PacketType.MCPE, true);
-					if (pkg != null)
-					{
-						packets.add (pkg);
-					} else
-					{
-						data.readerIndex (0);
-						McpeUnknown unknown = new McpeUnknown ();
-						unknown.decode (data);
-						packets.add (unknown);
-					}
+					throw new DataFormatException ("Contained packet is empty.");
+				}
+
+				NetworkPackage pkg = PacketRegistry.tryDecode (data, PacketType.MCPE, true);
+				if (pkg != null)
+				{
+					packets.add (pkg);
+				} else
+				{
+					data.readerIndex (0);
+					McpeUnknown unknown = new McpeUnknown ();
+					unknown.decode (data);
+					packets.add (unknown);
 				}
 			}
 		} catch (DataFormatException e)
@@ -146,40 +142,36 @@ public class CompressionUtil
 	public static ByteBuf inflate (ByteBuf buffer) throws DataFormatException
 	{
 		// Ensure that this buffer is direct.
-		if (buffer.getByte (0) == 0x78)
+		if (buffer.getByte (0) != 0x78) throw new DataFormatException ("No zlib header");
+		ByteBuf source = null;
+		ByteBuf decompressed = PooledByteBufAllocator.DEFAULT.directBuffer ();
+
+		try
 		{
-			ByteBuf source = null;
-			ByteBuf decompressed = PooledByteBufAllocator.DEFAULT.directBuffer ();
-			
-			try
+			if (!buffer.isDirect ())
 			{
-				if (!buffer.isDirect ())
-				{
-					// We don't have a direct buffer. Create one.
-					ByteBuf temporary = PooledByteBufAllocator.DEFAULT.directBuffer ();
-					temporary.writeBytes (buffer);
-					source = temporary;
-				} else
-				{
-					source = buffer;
-				}
-				
-				inflaterLocal.get ().process (source, decompressed);
-				return decompressed;
-			} catch (DataFormatException e)
+				// We don't have a direct buffer. Create one.
+				ByteBuf temporary = PooledByteBufAllocator.DEFAULT.directBuffer ();
+				temporary.writeBytes (buffer);
+				source = temporary;
+			} else
 			{
-				decompressed.release ();
-				throw e;
-			} finally
+				source = buffer;
+			}
+
+			inflaterLocal.get ().process (source, decompressed);
+			return decompressed;
+		} catch (DataFormatException e)
+		{
+			decompressed.release ();
+			throw e;
+		} finally
+		{
+			if (source != null && source != buffer)
 			{
-				if (source != null && source != buffer)
-				{
-					source.release ();
-				}
+				source.release ();
 			}
 		}
-		
-		return null;
 	}
 
 	/**
