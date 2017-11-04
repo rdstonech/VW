@@ -99,20 +99,20 @@ public class LevelEntityManager
 						{
 							continue;
 						}
-						if (log.isDebugEnabled ())
+						/*if (log.isDebugEnabled ())
 						{
 							log.debug ("Running entity system {} on {}", system, entity);
-						}
+						}*/
 						system.getRunner ().run (entity);
 					}
 
 					// After ticking the systems, one of them may have removed the entity. Check it again.
 					if (entity.isRemoved ())
 					{
-						if (log.isDebugEnabled ())
+						/*if (log.isDebugEnabled ())
 						{
 							log.debug ("{} was removed after systems ticked, discarding.", entity);
-						}
+						}*/
 						entitiesChanged.set (true);
 						synchronized (entities)
 						{

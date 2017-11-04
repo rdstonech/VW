@@ -5,6 +5,7 @@ import com.flowpowered.math.vector.Vector3f;
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableList;
 import com.spotify.futures.CompletableFutures;
 import com.voxelwind.api.game.entities.Entity;
 import com.voxelwind.api.game.entities.components.*;
@@ -15,9 +16,11 @@ import com.voxelwind.api.game.inventories.Inventory;
 import com.voxelwind.api.game.inventories.OpenableInventory;
 import com.voxelwind.api.game.inventories.PlayerInventory;
 import com.voxelwind.api.game.item.ItemStack;
+import com.voxelwind.api.game.item.ItemTypes;
 import com.voxelwind.api.game.level.Chunk;
 import com.voxelwind.api.game.level.Level;
 import com.voxelwind.api.game.level.block.Block;
+import com.voxelwind.api.game.level.block.BlockState;
 import com.voxelwind.api.game.level.block.BlockType;
 import com.voxelwind.api.game.level.block.BlockTypes;
 import com.voxelwind.api.game.util.TextFormat;
@@ -52,14 +55,17 @@ import com.voxelwind.server.game.level.block.BasicBlockState;
 import com.voxelwind.server.game.level.block.BlockBehavior;
 import com.voxelwind.server.game.level.block.BlockBehaviors;
 import com.voxelwind.server.game.level.block.behaviors.BehaviorUtils;
+import com.voxelwind.server.game.level.block.behaviors.DecreaseBreakTimeBySpecificToolsBehaviour;
 import com.voxelwind.server.game.level.chunk.util.FullChunkPacketCreator;
 import com.voxelwind.server.game.level.util.BoundingBox;
 import com.voxelwind.server.game.level.util.Gamerule;
 import com.voxelwind.server.game.level.util.PlayerAttribute;
 import com.voxelwind.server.game.permissions.PermissionLevel;
+import com.voxelwind.server.game.serializer.MetadataSerializer;
 import com.voxelwind.server.network.NetworkPackage;
 import com.voxelwind.server.network.mcpe.packets.*;
 import com.voxelwind.server.network.mcpe.util.ActionPermissionFlag;
+import com.voxelwind.server.network.mcpe.util.LevelEventConstants;
 import com.voxelwind.server.network.raknet.handler.NetworkPacketHandler;
 import com.voxelwind.server.network.session.auth.PlayerRecord;
 import gnu.trove.set.TLongSet;
@@ -1006,13 +1012,40 @@ public class PlayerSession extends LivingEntity implements Player, InventoryObse
 			switch (packet.getAction ())
 			{
 				case START_BREAK:
-					// Fire interact
+					if (ensureAndGet (PlayerData.class).getGameMode () != GameMode.CREATIVE)
+					{
+						Optional<Block> blockOptional = getLevel ().getBlockIfChunkLoaded (packet.getPosition ());
+						
+						if (blockOptional.isPresent ())
+						{
+							Block block = blockOptional.get ();
+							if (block.getBlockState ().getBlockType ().isDiggable ())
+							{
+								Optional<ItemStack> stackOptional = getInventory ().getStackInHand ();
+								
+								BlockBehavior behavior = BlockBehaviors.getBlockBehavior (block.getBlockState ().getBlockType ());
+								
+								Double breakTime;
+								
+								if (behavior instanceof DecreaseBreakTimeBySpecificToolsBehaviour)
+								{
+									breakTime = (double) block.getBlockState ().getBlockType ().getBreakTime (stackOptional, ((DecreaseBreakTimeBySpecificToolsBehaviour) behavior).getAllowedTypes ());
+								}
+								else
+								{
+									breakTime = (double) block.getBlockState ().getBlockType ().getBreakTime (stackOptional, ImmutableList.of ());
+								}
+								
+								breakTime = Math.floor (breakTime * 20 + 0.5);
+								
+								getLevel ().broadcastLevelEvent (LevelEventConstants.EVENT_BLOCK_START_BREAK, packet.getPosition ().toFloat (), (int) (65535 / breakTime));
+							}
+						}
+					}
 					break;
 				case ABORT_BREAK:
-					// No-op
-					break;
 				case STOP_BREAK:
-					// No-op
+					getLevel ().broadcastLevelEvent (LevelEventConstants.EVENT_BLOCK_STOP_BREAK, packet.getPosition ().toFloat (), 0);
 					break;
 				case DROP_ITEM:
 					// Drop item, shoot bow, or dump bucket?
@@ -1060,9 +1093,19 @@ public class PlayerSession extends LivingEntity implements Player, InventoryObse
 					sendAttributes ();
 					break;
 				case BREAKING:
-					// In process of breaking block.
+					Optional<Block> blockOptional = getLevel ().getBlockIfChunkLoaded (packet.getPosition ());
+					
+					if (blockOptional.isPresent ())
+					{
+						BlockState blockState = blockOptional.get ().getBlockState ();
+						int blockMetadata = MetadataSerializer.serializeMetadata (blockState);
+						int data = blockState.getBlockType ().getId () | blockMetadata << 8 | packet.getFace () << 16;
+						
+						getLevel ().broadcastLevelEvent (LevelEventConstants.EVENT_PARTICLE_PUNCH_BLOCK, packet.getPosition ().toFloat (), data);
+					}
 					break;
 			}
+			
 			broadcastSetEntityData ();
 		}
 		

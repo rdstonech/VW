@@ -1,6 +1,9 @@
 package com.voxelwind.api.game.level.block;
 
 import com.voxelwind.api.game.Metadata;
+import com.voxelwind.api.game.item.ItemStack;
+import com.voxelwind.api.game.item.ItemType;
+import com.voxelwind.api.game.item.ItemTypes;
 import com.voxelwind.api.game.item.data.Dyed;
 import com.voxelwind.api.game.item.data.wood.Log;
 import com.voxelwind.api.game.item.data.wood.Wood;
@@ -13,6 +16,9 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Builder;
 import lombok.experimental.UtilityClass;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class contains all block types recognized by Voxelwind and Bedrock Edition.
@@ -355,6 +361,47 @@ public class BlockTypes
 		public float getHardness ()
 		{
 			return hardness;
+		}
+		
+		@Override
+		public float getBreakTime (Optional<ItemStack> stackOptional, List<ItemType> allowedTools)
+		{
+			float time = hardness * 1.5F;
+			
+			if (stackOptional.isPresent ())
+			{
+				ItemStack stack = stackOptional.get ();
+				if (stack.getItemType ().isTool ())
+				{
+					if (stack.getItemType () == ItemTypes.SHEARS && allowedTools.contains (ItemTypes.SHEARS))
+					{
+						time /= 15;
+					}
+					else if (allowedTools.contains (stack.getItemType ()) && stack.getItemType ().isTool ())
+					{
+						switch (((ItemTypes.ToolItem) stack.getItemType ()).getMaterialType ())
+						{
+							case WOOD:
+								time /= 1.3;
+								break;
+							case STONE:
+								time /= 4;
+								break;
+							case IRON:
+								time /= 6;
+								break;
+							case DIAMOND:
+								time /= 8;
+								break;
+							case GOLD:
+								time /= 12;
+								break;
+						}
+					}
+				}
+			}
+			
+			return time;
 		}
 		
 		@Override

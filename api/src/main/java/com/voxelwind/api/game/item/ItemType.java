@@ -12,6 +12,8 @@ public interface ItemType
 	String getName ();
 
 	boolean isBlock ();
+	
+	boolean isTool ();
 
 	Class<? extends Metadata> getMetadataClass ();
 
