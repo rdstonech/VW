@@ -37,6 +37,7 @@ public class WorldInteractionTransactionRecord extends TransactionRecord
 				session.handledropItem (this);
 				break;
 			case PICKUP_ITEM:
+				break;
 		}
 	}
 

@@ -919,22 +919,17 @@ public class PlayerSession extends LivingEntity implements Player, InventoryObse
 	public void handledropItem (WorldInteractionTransactionRecord record)
 	{
 		
-		if (record.getOldItem ().getItemType () == BlockTypes.AIR)
+		if (record.getNewItem ().getItemType () == BlockTypes.AIR)
 		{
 			return;
 		}
 		
 		// TODO: Events
-		Optional<ItemStack> stackOptional = playerInventory.getStackInHand ();
-		if (!stackOptional.isPresent ())
-		{
-			sendPlayerInventory ();
-			return;
-		}
 		
-		DroppedItem item = new VoxelwindDroppedItem (getLevel (), getPosition ().add (0, 1.3, 0), getServer (), stackOptional.get ());
-		item.setMotion (getDirectionVector ().mul (0.4));
-		playerInventory.clearItem (playerInventory.getHeldInventorySlot ());
+		DroppedItem item = new VoxelwindDroppedItem (getLevel (), getPosition ().add (0, 1.3, 0), getServer (), record.getNewItem ());
+		item.ensureAndGet (PickupDelay.class).setDelayPickupTicks (30);
+		item.ensureAndGet (Physics.class).setGravity (0.04);
+		item.setMotion (getDirectionVector ().mul (0.25));
 	}
 	
 	public boolean isSpawned ()
